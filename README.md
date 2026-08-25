@@ -5,7 +5,20 @@ SafeGuard es una aplicación web orientada a la prevención del grooming y al an
 > ⚠️ **Nota:** Este proyecto fue desarrollado con fines académicos y de práctica. Los números de contacto y emergencia incluidos en el código son de ejemplo y deben reemplazarse por los correspondientes a tu región antes de cualquier uso real.
 
 
-##Vista previa
+## Vista previa
+
+**Página de inicio**
+<img width="1283" height="664" alt="image" src="https://github.com/user-attachments/assets/d3e6c767-6426-4abb-bb80-4fdcdbfa0ac7" />
+
+**Panel de control (Dashboard)**
+<img width="1264" height="657" alt="image" src="https://github.com/user-attachments/assets/66f13617-6da3-4697-973b-b9af8c6fc135" />
+
+**Analizador de mensajes con IA**
+<img width="1271" height="683" alt="image" src="https://github.com/user-attachments/assets/b8436b08-a450-41b3-b951-a44e785ca75a" />
+
+**Generación de reportes personalizados**
+<img width="1273" height="665" alt="image" src="https://github.com/user-attachments/assets/79ed7e09-c3ea-4a18-a903-d14e19ad82ff" />
+
 
 ## Funcionalidades
 
@@ -99,4 +112,4 @@ Tablas principales:
 
 ---
 
-_#Proyecto SafeGuard - Proyecto de Investigación académica _
+*Proyecto SafeGuard - Proyecto de Investigación académica.*
