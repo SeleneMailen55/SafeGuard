@@ -1,0 +1,404 @@
+{% extends "base_v2.html" %}
+
+{% block title %}SafeGuard - Protección contra Grooming{% endblock %}
+
+{% block content %}
+{% if not current_user.is_authenticated %}
+<div class="hero-section text-center text-white animate-on-scroll">
+    <h1 class="display-4 fw-bold mb-4">
+        <i class="fas fa-shield-alt me-3"></i>
+        SafeGuard
+    </h1>
+    <p class="lead mb-4">
+        Una plataforma integral para prevenir y detectar el grooming infantil en entornos digitales
+    </p>
+    <p class="fs-5 mb-4">
+        Protegemos a nuestros niños con tecnología avanzada e información educativa
+    </p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="/register" class="btn btn-primary btn-lg">
+            <i class="fas fa-user-plus me-2"></i>Comenzar Ahora
+        </a>
+        <a href="/login" class="btn btn-outline-light btn-lg">
+            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+        </a>
+    </div>
+</div>
+
+<!-- Secciones principales -->
+<div class="row g-4 my-5">
+    <div class="col-md-6">
+        <div class="card h-100 text-center animate-on-scroll">
+            <div class="card-body p-4">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-child"></i>
+                </div>
+                <h3 class="card-title mb-3">Para Niños y Adolescentes</h3>
+                <p class="card-text mb-4">
+                    Herramientas educativas interactivas diseñadas para que los menores aprendan 
+                    a identificar situaciones peligrosas y sepan cómo actuar de forma segura.
+                </p>
+                <ul class="list-unstyled text-start mb-4">
+                    <li class="mb-2"><i class="fas fa-gamepad text-success me-2"></i>Quiz interactivos de seguridad</li>
+                    <li class="mb-2"><i class="fas fa-comments text-info me-2"></i>Simulador de chat seguro</li>
+                    <li class="mb-2"><i class="fas fa-book-open text-warning me-2"></i>Material educativo especializado</li>
+                    <li class="mb-2"><i class="fas fa-users text-primary me-2"></i>Sistema de contactos de confianza</li>
+                    <li class="mb-2"><i class="fas fa-exclamation-triangle text-danger me-2"></i>Botón de emergencia 24/7</li>
+                </ul>
+                <a href="/register" class="btn btn-warning btn-lg">
+                    <i class="fas fa-arrow-right me-2"></i>Registrarme como Niño
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100 text-center animate-on-scroll">
+            <div class="card-body p-4">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h3 class="card-title mb-3">Para Padres y Tutores</h3>
+                <p class="card-text mb-4">
+                    Herramientas avanzadas de análisis para padres, tutores y educadores que desean 
+                    proteger a los menores mediante tecnología de inteligencia artificial.
+                </p>
+                <ul class="list-unstyled text-start mb-4">
+                    <li class="mb-2"><i class="fas fa-robot text-primary me-2"></i>Analizador de mensajes con IA</li>
+                    <li class="mb-2"><i class="fas fa-camera text-info me-2"></i>Análisis de imágenes y capturas</li>
+                    <li class="mb-2"><i class="fas fa-history text-success me-2"></i>Historial completo de análisis</li>
+                    <li class="mb-2"><i class="fas fa-file-pdf text-danger me-2"></i>Reportes detallados en PDF</li>
+                    <li class="mb-2"><i class="fas fa-chart-line text-warning me-2"></i>Dashboard con estadísticas</li>
+                </ul>
+                <a href="/register" class="btn btn-primary btn-lg">
+                    <i class="fas fa-arrow-right me-2"></i>Registrarme como Adulto
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Información importante -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">
+                    <i class="fas fa-info-circle text-info me-2"></i>
+                    Información Importante sobre Grooming
+                </h3>
+                
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="info-box">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                            </div>
+                            <h5>¿Qué es el Grooming?</h5>
+                            <p class="text-muted">
+                                Proceso por el cual un adulto se gana la confianza de un menor de edad 
+                                para obtener beneficios sexuales, explotarlo o abusar de él.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="info-box">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-search text-primary"></i>
+                            </div>
+                            <h5>Señales de Alerta</h5>
+                            <p class="text-muted">
+                                Regalos inesperados, solicitud de secretos, aislamiento de amigos y familia, 
+                                conversaciones de contenido sexual inapropiado.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="info-box">
+                            <div class="icon-box mb-3">
+                                <i class="fas fa-hands-helping text-success"></i>
+                            </div>
+                            <h5>¿Cómo Ayudamos?</h5>
+                            <p class="text-muted">
+                                Con educación interactiva para menores y herramientas de análisis 
+                                con IA para detectar comunicaciones sospechosas.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if current_user.is_authenticated %}
+<!-- Dashboard rápido para usuarios autenticados -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-tachometer-alt me-2"></i>Acceso Rápido
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if current_user.role == 'niño' %}
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="/dashboard/nino" class="btn btn-primary w-100">
+                                <i class="fas fa-home d-block mb-2"></i>
+                                Mi Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/kids/quiz" class="btn btn-success w-100">
+                                <i class="fas fa-gamepad d-block mb-2"></i>
+                                Quiz de Seguridad
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/kids/chat-sim" class="btn btn-info w-100">
+                                <i class="fas fa-comments d-block mb-2"></i>
+                                Simulador de Chat
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/kids/contacts" class="btn btn-warning w-100">
+                                <i class="fas fa-address-book d-block mb-2"></i>
+                                Mis Contactos
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="/dashboard/adulto" class="btn btn-primary w-100">
+                                <i class="fas fa-tachometer-alt d-block mb-2"></i>
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/analyze" class="btn btn-success w-100">
+                                <i class="fas fa-search d-block mb-2"></i>
+                                Analizador IA
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/history" class="btn btn-info w-100">
+                                <i class="fas fa-history d-block mb-2"></i>
+                                Historial
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/reports" class="btn btn-warning w-100">
+                                <i class="fas fa-file-pdf d-block mb-2"></i>
+                                Reportes
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Estadísticas y datos -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-header text-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Datos Relevantes sobre Grooming
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-4 text-center">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number text-danger">1 de 7</div>
+                            <div class="stat-label">niños ha recibido solicitudes sexuales online</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number text-warning">58%</div>
+                            <div class="stat-label">de los casos ocurre en redes sociales</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number text-info">89%</div>
+                            <div class="stat-label">de los menores no reporta estos casos</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number text-success">95%</div>
+                            <div class="stat-label">de efectividad con educación preventiva</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Emergencia siempre visible -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="alert alert-danger animate-on-scroll" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                ¿Situación de Emergencia?
+            </h4>
+            <p>Si tú o alguien que conoces está en peligro inmediato:</p>
+            <hr>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <a href="tel:911" class="btn btn-danger w-100">
+                        <i class="fas fa-phone me-2"></i>Llamar al 911
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="tel:08002221717" class="btn btn-warning w-100">
+                        <i class="fas fa-phone me-2"></i>Línea Nacional: 0800-222-1717
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="mailto:emergencia@safeguard.com" class="btn btn-info w-100">
+                        <i class="fas fa-envelope me-2"></i>Email de Emergencia
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recursos adicionales -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">
+                    <i class="fas fa-book-open text-primary me-2"></i>
+                    Recursos Adicionales
+                </h3>
+                
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="resource-item">
+                            <i class="fas fa-phone text-success"></i>
+                            <h6>Líneas de Ayuda</h6>
+                            <p>0800-222-1717 (gratuita 24/7)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="resource-item">
+                            <i class="fas fa-envelope text-info"></i>
+                            <h6>Email de Denuncias</h6>
+                            <p>denuncia@cibercrimen.gob.ar</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="resource-item">
+                            <i class="fas fa-users text-warning"></i>
+                            <h6>ONGs Especializadas</h6>
+                            <p>Organizaciones de protección infantil</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="resource-item">
+                            <i class="fas fa-graduation-cap text-primary"></i>
+                            <h6>Educación Online</h6>
+                            <p>Talleres y capacitaciones gratuitas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.info-box {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.info-box:hover {
+    transform: translateY(-10px);
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.resource-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.resource-item:hover {
+    transform: translateY(-3px);
+    background: white;
+}
+
+.resource-item i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.resource-item h6 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.resource-item p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 2rem 1rem;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    background: white;
+    border-color: #667eea;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+</style>
+{% endblock %}

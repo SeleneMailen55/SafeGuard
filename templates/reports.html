@@ -1,0 +1,633 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Generador de Reportes - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        📊 Generador de Reportes
+    </h1>
+    <p class="lead">Crea reportes personalizados de análisis de seguridad</p>
+    <p class="fs-6">Exporta tus datos con filtros avanzados y estadísticas detalladas</p>
+</div>
+
+<div class="row">
+    <!-- Panel de configuración -->
+    <div class="col-lg-4">
+        <div class="card shadow animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-cog me-2"></i>Configuración del Reporte
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="report-form">
+                    <!-- Tipo de reporte -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tipo de Reporte</label>
+                        <select class="form-select" id="report-type">
+                            <option value="custom">Personalizado</option>
+                            <option value="daily">Último día</option>
+                            <option value="weekly">Última semana</option>
+                            <option value="monthly">Último mes</option>
+                            <option value="full">Completo</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Rango de fechas -->
+                    <div id="date-range-section">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Fecha de inicio</label>
+                            <input type="date" class="form-control" id="start-date">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Fecha de fin</label>
+                            <input type="date" class="form-control" id="end-date">
+                        </div>
+                    </div>
+                    
+                    <!-- Filtros -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Niveles de Riesgo</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="bajo" id="risk-low" checked>
+                            <label class="form-check-label" for="risk-low">
+                                <span class="badge bg-success">Bajo</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="medio" id="risk-medium" checked>
+                            <label class="form-check-label" for="risk-medium">
+                                <span class="badge bg-warning">Medio</span>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="alto" id="risk-high" checked>
+                            <label class="form-check-label" for="risk-high">
+                                <span class="badge bg-danger">Alto</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tipos de Contenido</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="texto" id="content-text" checked>
+                            <label class="form-check-label" for="content-text">
+                                <i class="fas fa-font me-1"></i>Texto
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="imagen" id="content-image" checked>
+                            <label class="form-check-label" for="content-image">
+                                <i class="fas fa-image me-1"></i>Imagen
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones de contenido -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Incluir en el Reporte</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="include-statistics" checked>
+                            <label class="form-check-label" for="include-statistics">
+                                Estadísticas y gráficos
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="include-details" checked>
+                            <label class="form-check-label" for="include-details">
+                                Detalles de análisis
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="include-recommendations" checked>
+                            <label class="form-check-label" for="include-recommendations">
+                                Recomendaciones de seguridad
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones -->
+                    <button type="button" id="generate-preview" class="btn btn-outline-primary w-100 mb-2">
+                        <i class="fas fa-eye me-2"></i>Vista Previa
+                    </button>
+                    <button type="button" id="generate-pdf" class="btn btn-primary w-100">
+                        <i class="fas fa-file-pdf me-2"></i>Generar PDF
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Reportes rápidos -->
+        <div class="card mt-4 shadow animate-on-scroll">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>Reportes Rápidos
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-success btn-sm quick-report" data-type="daily">
+                        <i class="fas fa-calendar-day me-2"></i>Reporte Diario
+                    </button>
+                    <button class="btn btn-outline-warning btn-sm quick-report" data-type="weekly">
+                        <i class="fas fa-calendar-week me-2"></i>Reporte Semanal
+                    </button>
+                    <button class="btn btn-outline-info btn-sm quick-report" data-type="monthly">
+                        <i class="fas fa-calendar-alt me-2"></i>Reporte Mensual
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panel de estadísticas y vista previa -->
+    <div class="col-lg-8">
+        <!-- Resumen estadístico -->
+        <div class="card shadow animate-on-scroll mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Resumen de Datos
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon">
+                                <i class="fas fa-search text-primary"></i>
+                            </div>
+                            <div class="stat-number">{{ total_analyses }}</div>
+                            <div class="stat-label">Total Análisis</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-triangle text-danger"></i>
+                            </div>
+                            <div class="stat-number">{{ threats_detected }}</div>
+                            <div class="stat-label">Amenazas Detectadas</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-day text-success"></i>
+                            </div>
+                            <div class="stat-number">{{ daily_analyses }}</div>
+                            <div class="stat-label">Hoy</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-week text-warning"></i>
+                            </div>
+                            <div class="stat-number">{{ weekly_analyses }}</div>
+                            <div class="stat-label">Esta Semana</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vista previa del reporte -->
+        <div class="card shadow animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-eye me-2"></i>Vista Previa del Reporte
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="report-preview" class="text-center text-muted">
+                    <i class="fas fa-file-pdf fa-3x mb-3"></i>
+                    <p>Selecciona las opciones de configuración y haz clic en "Vista Previa" para ver cómo se verá tu reporte.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historial de reportes -->
+        <div class="card mt-4 shadow animate-on-scroll">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-history me-2"></i>Reportes Recientes
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Análisis</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-history">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Los reportes generados aparecerán aquí
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-card {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,249,250,0.9) 100%);
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.form-check {
+    margin-bottom: 0.5rem;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#report-preview {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 2rem;
+}
+
+#report-preview.has-content {
+    border-style: solid;
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.05);
+}
+
+.quick-report {
+    transition: all 0.3s ease;
+}
+
+.quick-report:hover {
+    transform: translateX(5px);
+}
+
+#date-range-section {
+    transition: all 0.3s ease;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.progress-ring {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+}
+
+.progress-ring circle {
+    fill: none;
+    stroke: #667eea;
+    stroke-width: 4;
+    stroke-linecap: round;
+    animation: progress-animation 2s linear infinite;
+}
+
+@keyframes progress-animation {
+    0% {
+        stroke-dasharray: 0 188;
+    }
+    50% {
+        stroke-dasharray: 94 188;
+    }
+    100% {
+        stroke-dasharray: 0 188;
+    }
+}
+</style>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loading-overlay">
+    <div class="loading-content">
+        <svg class="progress-ring">
+            <circle cx="30" cy="30" r="25"></circle>
+        </svg>
+        <h5>Generando Reporte...</h5>
+        <p class="text-muted mb-0">Por favor espera mientras procesamos tu solicitud</p>
+    </div>
+</div>
+
+<script>
+class ReportGenerator {
+    constructor() {
+        this.initElements();
+        this.bindEvents();
+        this.setDefaultDates();
+    }
+    
+    initElements() {
+        this.reportType = document.getElementById('report-type');
+        this.startDate = document.getElementById('start-date');
+        this.endDate = document.getElementById('end-date');
+        this.dateRangeSection = document.getElementById('date-range-section');
+        this.generatePreviewBtn = document.getElementById('generate-preview');
+        this.generatePdfBtn = document.getElementById('generate-pdf');
+        this.reportPreview = document.getElementById('report-preview');
+        this.loadingOverlay = document.getElementById('loading-overlay');
+    }
+    
+    bindEvents() {
+        // Cambio de tipo de reporte
+        this.reportType.addEventListener('change', () => {
+            this.handleReportTypeChange();
+        });
+        
+        // Botones principales
+        this.generatePreviewBtn.addEventListener('click', () => {
+            this.generatePreview();
+        });
+        
+        this.generatePdfBtn.addEventListener('click', () => {
+            this.generatePDF();
+        });
+        
+        // Reportes rápidos
+        document.querySelectorAll('.quick-report').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.type;
+                this.reportType.value = type;
+                this.handleReportTypeChange();
+                this.generatePDF();
+            });
+        });
+    }
+    
+    setDefaultDates() {
+        const today = new Date();
+        const lastWeek = new Date(today);
+        lastWeek.setDate(today.getDate() - 7);
+        
+        this.startDate.value = lastWeek.toISOString().split('T')[0];
+        this.endDate.value = today.toISOString().split('T')[0];
+    }
+    
+    handleReportTypeChange() {
+        const type = this.reportType.value;
+        
+        if (type === 'custom') {
+            this.dateRangeSection.style.display = 'block';
+        } else {
+            this.dateRangeSection.style.display = 'none';
+        }
+    }
+    
+    getConfiguration() {
+        const config = {
+            type: this.reportType.value,
+            include_statistics: document.getElementById('include-statistics').checked,
+            include_details: document.getElementById('include-details').checked,
+            include_recommendations: document.getElementById('include-recommendations').checked,
+            risk_levels: [],
+            content_types: []
+        };
+        
+        // Si es personalizado, incluir fechas
+        if (config.type === 'custom') {
+            config.start_date = this.startDate.value;
+            config.end_date = this.endDate.value;
+        }
+        
+        // Niveles de riesgo
+        if (document.getElementById('risk-low').checked) config.risk_levels.push('bajo');
+        if (document.getElementById('risk-medium').checked) config.risk_levels.push('medio');
+        if (document.getElementById('risk-high').checked) config.risk_levels.push('alto');
+        
+        // Tipos de contenido
+        if (document.getElementById('content-text').checked) config.content_types.push('texto');
+        if (document.getElementById('content-image').checked) config.content_types.push('imagen');
+        
+        return config;
+    }
+    
+    generatePreview() {
+        const config = this.getConfiguration();
+        
+        let previewHtml = `
+            <div class="text-start">
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-file-pdf me-2 text-primary"></i>
+                    Vista Previa del Reporte
+                </h6>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <strong>Tipo:</strong> ${this.getReportTypeLabel(config.type)}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Período:</strong> ${this.getDateRangeLabel(config)}
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="mb-3">
+                    <strong>Filtros aplicados:</strong>
+                    <ul class="mb-2">
+                        <li>Niveles de riesgo: ${config.risk_levels.join(', ')}</li>
+                        <li>Tipos de contenido: ${config.content_types.join(', ')}</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Secciones incluidas:</strong>
+                    <ul class="mb-0">
+                        ${config.include_statistics ? '<li>✅ Estadísticas y resumen</li>' : '<li>❌ Estadísticas y resumen</li>'}
+                        ${config.include_details ? '<li>✅ Detalles de análisis</li>' : '<li>❌ Detalles de análisis</li>'}
+                        ${config.include_recommendations ? '<li>✅ Recomendaciones de seguridad</li>' : '<li>❌ Recomendaciones de seguridad</li>'}
+                    </ul>
+                </div>
+                
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>El reporte está listo para generar.</strong> Haz clic en "Generar PDF" para descargar.
+                </div>
+            </div>
+        `;
+        
+        this.reportPreview.innerHTML = previewHtml;
+        this.reportPreview.classList.add('has-content');
+    }
+    
+    async generatePDF() {
+        const config = this.getConfiguration();
+        
+        // Validaciones
+        if (config.risk_levels.length === 0) {
+            alert('Debes seleccionar al menos un nivel de riesgo.');
+            return;
+        }
+        
+        if (config.content_types.length === 0) {
+            alert('Debes seleccionar al menos un tipo de contenido.');
+            return;
+        }
+        
+        this.showLoading();
+        
+        try {
+            const response = await fetch('/api/generate-advanced-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(config)
+            });
+            
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `safeguard_report_${new Date().toISOString().split('T')[0]}.pdf`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                // Agregar al historial
+                this.addToHistory(config);
+                
+                window.safeguard.success('PDF generado exitosamente', 'Reporte Completado');
+            } else {
+                const error = await response.json();
+                throw new Error(error.error || 'Error desconocido');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            window.safeguard.error(`Error generando PDF: ${error.message}`, 'Error');
+        } finally {
+            this.hideLoading();
+        }
+    }
+    
+    showLoading() {
+        this.loadingOverlay.style.display = 'flex';
+    }
+    
+    hideLoading() {
+        this.loadingOverlay.style.display = 'none';
+    }
+    
+    getReportTypeLabel(type) {
+        const labels = {
+            'custom': 'Personalizado',
+            'daily': 'Diario',
+            'weekly': 'Semanal',
+            'monthly': 'Mensual',
+            'full': 'Completo'
+        };
+        return labels[type] || type;
+    }
+    
+    getDateRangeLabel(config) {
+        if (config.type === 'custom') {
+            return `${config.start_date} a ${config.end_date}`;
+        } else {
+            const labels = {
+                'daily': 'Últimas 24 horas',
+                'weekly': 'Últimos 7 días',
+                'monthly': 'Últimos 30 días',
+                'full': 'Todo el historial'
+            };
+            return labels[config.type];
+        }
+    }
+    
+    addToHistory(config) {
+        const historyTable = document.getElementById('reports-history');
+        const now = new Date();
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${now.toLocaleDateString()}</td>
+            <td><span class="badge bg-primary">${this.getReportTypeLabel(config.type)}</span></td>
+            <td>${config.risk_levels.length} niveles</td>
+            <td>
+                <small class="text-success">
+                    <i class="fas fa-check me-1"></i>Generado
+                </small>
+            </td>
+        `;
+        
+        // Remover mensaje de "no hay reportes" si existe
+        if (historyTable.children.length === 1 && 
+            historyTable.children[0].children[0].getAttribute('colspan')) {
+            historyTable.innerHTML = '';
+        }
+        
+        historyTable.insertBefore(row, historyTable.firstChild);
+        
+        // Mantener solo los últimos 5 reportes
+        while (historyTable.children.length > 5) {
+            historyTable.removeChild(historyTable.lastChild);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    new ReportGenerator();
+});
+</script>
+{% endblock %}

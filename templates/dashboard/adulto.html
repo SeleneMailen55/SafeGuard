@@ -1,0 +1,375 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Dashboard Adultos - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        <i class="fas fa-tachometer-alt me-3"></i>Panel de Control
+    </h1>
+    <p class="lead">Herramientas avanzadas para proteger a los menores online</p>
+    <p class="fs-6">Bienvenido/a {{ current_user.username }}, aquí puedes monitorear y analizar comunicaciones para detectar posibles amenazas</p>
+</div>
+
+<!-- Estadísticas principales -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="stat-card primary animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="stat-number">{{ total_analyses }}</div>
+            <div class="stat-label">Análisis Realizados</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card danger animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-number">{{ threats_detected }}</div>
+            <div class="stat-label">Amenazas Detectadas</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card warning animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="stat-number">{{ detection_rate }}%</div>
+            <div class="stat-label">Tasa de Detección</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card success animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-shield-check"></i>
+            </div>
+            <div class="stat-number">{{ total_analyses - threats_detected }}</div>
+            <div class="stat-label">Contenido Seguro</div>
+        </div>
+    </div>
+</div>
+
+<!-- Herramientas principales -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div class="card h-100 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-robot me-2"></i>Analizador IA
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Analiza mensajes de texto e imágenes para detectar posibles casos de grooming</p>
+                
+                <form id="quick-analysis-form">
+                    <div class="mb-3">
+                        <label for="quick-message" class="form-label">Análisis rápido:</label>
+                        <textarea class="form-control" id="quick-message" rows="3" 
+                                placeholder="Pega aquí el mensaje a analizar..."></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-primary" onclick="quickAnalyze()">
+                            <i class="fas fa-search me-2"></i>Analizar Ahora
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-3">
+                    <a href="/analyze" class="btn btn-outline-primary">
+                        <i class="fas fa-cogs me-2"></i>Analizador Avanzado
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-pdf me-2"></i>Reportes
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Genera reportes detallados de todos tus análisis y hallazgos</p>
+                
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success" onclick="generateReport('daily')">
+                        <i class="fas fa-calendar-day me-2"></i>Reporte Diario
+                    </button>
+                    <button class="btn btn-info" onclick="generateReport('weekly')">
+                        <i class="fas fa-calendar-week me-2"></i>Reporte Semanal
+                    </button>
+                    <button class="btn btn-warning" onclick="generateReport('full')">
+                        <i class="fas fa-file-alt me-2"></i>Reporte Completo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Análisis recientes -->
+<div class="row g-4 mb-5">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>Análisis Recientes
+                </h5>
+                <a href="/history" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-list me-1"></i>Ver Historial
+                </a>
+            </div>
+            <div class="card-body">
+                {% if recent_analyses %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Riesgo</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for analysis in recent_analyses %}
+                                    <tr>
+                                        <td>
+                                            <small>{{ analysis.timestamp.strftime('%d/%m/%Y %H:%M') }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">
+                                                <i class="fas fa-{{ 'comment' if analysis.content_type == 'texto' else 'image' }} me-1"></i>
+                                                {{ analysis.content_type.title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if analysis.risk_level == 'alto' %}
+                                                <span class="badge bg-danger">Alto</span>
+                                            {% elif analysis.risk_level == 'medio' %}
+                                                <span class="badge bg-warning">Medio</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Bajo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if analysis.is_grooming %}
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-exclamation-triangle me-1"></i>Amenaza
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check me-1"></i>Seguro
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <button class="btn btn-outline-info" onclick="viewAnalysis({{ analysis.id }})" title="Ver detalles">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-outline-success" onclick="downloadAnalysis({{ analysis.id }})" title="Descargar PDF">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-search text-muted" style="font-size: 4rem;"></i>
+                        <h5 class="mt-3 text-muted">Aún no has realizado análisis</h5>
+                        <p class="text-muted">Comienza analizando mensajes para detectar posibles amenazas</p>
+                        <a href="/analyze" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Realizar Primer Análisis
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico de actividad -->
+<div class="row g-4 mb-5">
+    <div class="col-md-8">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-area me-2"></i>Actividad de los Últimos 7 Días
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="activity-chart" style="height: 300px;">
+                    <!-- Aquí iría un gráfico con Chart.js o similar -->
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-2">Gráfico de actividad<br><small>Próximamente</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bullseye me-2"></i>Objetivos del Mes
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="goal-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold">Análisis Realizados</span>
+                        <span class="text-muted">{{ total_analyses }}/50</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: {{ (total_analyses / 50 * 100)|round }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="goal-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold">Reportes Generados</span>
+                        <span class="text-muted">0/10</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="goal-item">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold">Efectividad</span>
+                        <span class="text-muted">{{ detection_rate }}%/90%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: {{ (detection_rate / 90 * 100)|round }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Consejos y recursos -->
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Consejos para Padres
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="tip-item mb-3">
+                    <h6><i class="fas fa-comments text-primary me-2"></i>Comunicación Abierta</h6>
+                    <p class="text-muted mb-0">Mantén conversaciones regulares con tus hijos sobre su actividad online sin ser invasivo.</p>
+                </div>
+                
+                <div class="tip-item mb-3">
+                    <h6><i class="fas fa-clock text-warning me-2"></i>Supervisión Apropiada</h6>
+                    <p class="text-muted mb-0">Establece horarios y límites para el uso de dispositivos e internet.</p>
+                </div>
+                
+                <div class="tip-item">
+                    <h6><i class="fas fa-graduation-cap text-success me-2"></i>Educación Continua</h6>
+                    <p class="text-muted mb-0">Manténte actualizado sobre las nuevas plataformas y riesgos online.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-phone me-2"></i>Recursos de Emergencia
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Si Detectas una Amenaza Real:</h6>
+                    <ul class="mb-0">
+                        <li>Documenta toda la evidencia</li>
+                        <li>No confrontes al agresor directamente</li>
+                        <li>Contacta a las autoridades inmediatamente</li>
+                        <li>Busca apoyo profesional para el menor</li>
+                    </ul>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="tel:911" class="btn btn-danger">
+                        <i class="fas fa-phone me-2"></i>Emergencia: 911
+                    </a>
+                    <a href="mailto:denuncia@cibercrimen.gob" class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>Denunciar Cibercrimen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function quickAnalyze() {
+    const message = document.getElementById('quick-message').value.trim();
+    if (!message) {
+        window.safeguard.warning('Por favor ingresa un mensaje para analizar.');
+        return;
+    }
+    
+    // Redirigir al analizador con el mensaje prellenado
+    sessionStorage.setItem('quick-message', message);
+    window.location.href = '/analyze';
+}
+
+function generateReport(type) {
+    window.safeguard.confirm(
+        `¿Deseas generar un reporte ${type === 'daily' ? 'diario' : type === 'weekly' ? 'semanal' : 'completo'}?`,
+        'Generar Reporte',
+        () => {
+            window.safeguard.alert('Generando reporte, por favor espera...', 'Procesando');
+            // Aquí iría la lógica para generar el reporte
+        }
+    );
+}
+
+function viewAnalysis(analysisId) {
+    window.safeguard.alert('Cargando detalles del análisis...', 'Cargando');
+    // Aquí iría la lógica para ver los detalles
+}
+
+function downloadAnalysis(analysisId) {
+    window.safeguard.success('Descarga iniciada', 'Descargando PDF');
+    // Aquí iría la lógica para descargar el PDF
+}
+</script>
+
+<style>
+.goal-item {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.tip-item {
+    border-left: 3px solid #667eea;
+    padding-left: 1rem;
+}
+</style>
+{% endblock %}

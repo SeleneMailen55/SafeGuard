@@ -1,0 +1,574 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Asistente de Voz SARA - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        🎤 Asistente de Voz SARA
+    </h1>
+    <p class="lead">Sistema de Asistencia y Respuesta Automatizada</p>
+    <p class="fs-6">Habla con SARA sobre seguridad digital y obtén ayuda instantánea</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Panel Principal del Asistente -->
+        <div class="card shadow-lg animate-on-scroll mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-microphone-alt me-2"></i>SARA - Tu Asistente de Seguridad
+                    </h4>
+                    <div id="voice-status" class="badge bg-secondary">Inactivo</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <!-- Avatar animado -->
+                <div class="text-center mb-4">
+                    <div id="sara-avatar" class="sara-avatar">
+                        <div class="avatar-circle">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="voice-waves">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                    </div>
+                    <h5 class="mt-3">¡Hola! Soy SARA</h5>
+                    <p class="text-muted">Presiona el botón y háblame sobre seguridad digital</p>
+                </div>
+
+                <!-- Controles de Voz -->
+                <div class="voice-controls text-center mb-4">
+                    <button id="start-voice" class="btn btn-success btn-lg me-3">
+                        <i class="fas fa-microphone me-2"></i>Iniciar Grabación
+                    </button>
+                    <button id="stop-voice" class="btn btn-danger btn-lg" disabled>
+                        <i class="fas fa-stop me-2"></i>Detener todo
+                    </button>
+                </div>
+
+                <!-- Área de transcripción -->
+                <div class="transcription-area mb-4">
+                    <label class="form-label fw-bold">Lo que dijiste:</label>
+                    <div id="transcription" class="transcription-box">
+                        <p class="text-muted mb-0">Tu voz aparecerá aquí...</p>
+                    </div>
+                </div>
+
+                <!-- Respuesta de SARA -->
+                <div class="response-area">
+                    <label class="form-label fw-bold">Respuesta de SARA:</label>
+                    <div id="sara-response" class="response-box">
+                        <p class="text-muted mb-0">SARA responderá aquí...</p>
+                    </div>
+                    <button id="speak-response" class="btn btn-outline-primary mt-2" disabled>
+                        <i class="fas fa-volume-up me-2"></i>Escuchar Respuesta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sugerencias de preguntas -->
+        <div class="card animate-on-scroll mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Preguntas Sugeridas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-info w-100 question-btn" 
+                                data-question="¿Qué es el grooming online?">
+                            <i class="fas fa-question-circle me-2"></i>
+                            ¿Qué es el grooming online?
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-info w-100 question-btn" 
+                                data-question="¿Cómo puedo proteger mi privacidad?">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            ¿Cómo proteger mi privacidad?
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-info w-100 question-btn" 
+                                data-question="¿Qué hacer si alguien me pide fotos?">
+                            <i class="fas fa-camera me-2"></i>
+                            ¿Qué hacer si piden fotos?
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-info w-100 question-btn" 
+                                data-question="¿Cuándo debo pedir ayuda a un adulto?">
+                            <i class="fas fa-hands-helping me-2"></i>
+                            ¿Cuándo pedir ayuda?
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información sobre el asistente -->
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Sobre SARA
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-4 text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain text-primary"></i>
+                        </div>
+                        <h6>Inteligencia Artificial</h6>
+                        <p class="text-muted">Powered by Gemini AI para respuestas inteligentes</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-microphone text-success"></i>
+                        </div>
+                        <h6>Reconocimiento de Voz</h6>
+                        <p class="text-muted">Habla naturalmente y SARA te entenderá</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt text-warning"></i>
+                        </div>
+                        <h6>Enfoque en Seguridad</h6>
+                        <p class="text-muted">Especializada en protección infantil digital</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.sara-avatar {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.avatar-circle.listening {
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+    }
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+    }
+}
+
+.voice-waves {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.voice-waves.active {
+    display: block;
+}
+
+.wave {
+    width: 140px;
+    height: 140px;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    border-radius: 50%;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    animation: wave 2s linear infinite;
+}
+
+.wave:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.wave:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes wave {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.transcription-box, .response-box {
+    min-height: 80px;
+    padding: 1rem;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.transcription-box.active {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.response-box.active {
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.05);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.question-btn {
+    text-align: left;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.question-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.voice-controls .btn {
+    min-width: 180px;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.voice-controls .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+#voice-status {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+#voice-status.listening {
+    background: linear-gradient(45deg, #28a745, #20c997) !important;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.7; }
+}
+</style>
+
+<script>
+class VoiceAssistant {
+    constructor() {
+        this.recognition = null;
+        this.synthesis = window.speechSynthesis;
+        this.isListening = false;
+        this.currentResponse = '';
+        this.currentUtterance = null;
+        this.isSpeaking = false;
+        this.autoSpeakTimeout = null;
+        this.initSpeechRecognition();
+        this.bindEvents();
+        if (this.synthesis) {
+            this.synthesis.onvoiceschanged = () => {
+                this.synthesis.getVoices();
+            };
+}
+    }
+    
+    initSpeechRecognition() {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SpeechRecognition();
+            
+            this.recognition.continuous = false;
+            this.recognition.interimResults = true;
+            this.recognition.lang = 'es-ES';
+            
+            this.recognition.onstart = () => {
+                this.isListening = true;
+                this.updateUI('listening');
+            };
+            
+            this.recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                document.getElementById('transcription').innerHTML = `<p>${transcript}</p>`;
+            };
+            
+            this.recognition.onend = () => {
+                this.isListening = false;
+                this.updateUI('stopped');
+                
+                const finalTranscript = document.getElementById('transcription').textContent.trim();
+                if (finalTranscript && finalTranscript !== 'Tu voz aparecerá aquí...') {
+                    this.sendToAssistant(finalTranscript);
+                }
+            };
+            
+            this.recognition.onerror = (event) => {
+                console.error('Error de reconocimiento de voz:', event.error);
+                this.isListening = false;
+                this.updateUI('error');
+            };
+        } else {
+            alert('Tu navegador no soporta reconocimiento de voz. Intenta con Chrome o Edge.');
+        }
+    }
+    
+    bindEvents() {
+        document.getElementById('start-voice').addEventListener('click', () => {
+            this.startListening();
+        });
+        
+        document.getElementById('stop-voice').addEventListener('click', () => {
+            this.stopListening();
+        });
+        
+        document.getElementById('speak-response').addEventListener('click', () => {
+            this.speakResponse();
+        });
+        
+        // Preguntas sugeridas
+        document.querySelectorAll('.question-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const question = btn.dataset.question;
+                document.getElementById('transcription').innerHTML = `<p>${question}</p>`;
+                this.sendToAssistant(question);
+            });
+        });
+    }
+    
+    startListening() {
+        if (this.recognition && !this.isListening) {
+            document.getElementById('transcription').innerHTML = '<p class="text-muted">Escuchando...</p>';
+            this.recognition.start();
+        }
+    }
+    
+    stopListening() {
+            // Detener reconocimiento de voz
+            if (this.recognition && this.isListening) {
+                this.recognition.stop();
+            }
+
+            // Detener voz de SARA
+            if (this.synthesis) {
+                this.synthesis.cancel();
+            }
+
+            // Limpiar estado interno
+            this.currentUtterance = null;
+            this.isSpeaking = false;
+
+            if (this.autoSpeakTimeout) {
+                clearTimeout(this.autoSpeakTimeout);
+                this.autoSpeakTimeout = null;
+            }
+
+            const speakBtn = document.getElementById('speak-response');
+            if (speakBtn) {
+                speakBtn.innerHTML = '<i class="fas fa-volume-up me-2"></i>Escuchar Respuesta';
+            }
+
+            this.updateUI('stopped');
+        }
+    
+    updateUI(state) {
+        const startBtn = document.getElementById('start-voice');
+        const stopBtn = document.getElementById('stop-voice');
+        const status = document.getElementById('voice-status');
+        const avatar = document.querySelector('.avatar-circle');
+        const waves = document.querySelector('.voice-waves');
+        const transcriptionBox = document.getElementById('transcription').parentElement;
+        
+        switch(state) {
+            case 'listening':
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                status.textContent = 'Escuchando...';
+                status.className = 'badge bg-success listening';
+                avatar.classList.add('listening');
+                waves.classList.add('active');
+                transcriptionBox.classList.add('active');
+                break;
+                
+            case 'stopped':
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                status.textContent = 'Inactivo';
+                status.className = 'badge bg-secondary';
+                avatar.classList.remove('listening');
+                waves.classList.remove('active');
+                transcriptionBox.classList.remove('active');
+                break;
+                
+            case 'processing':
+                startBtn.disabled = true;
+                stopBtn.disabled = true;
+                status.textContent = 'Procesando...';
+                status.className = 'badge bg-warning';
+                break;
+                
+            case 'error':
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                status.textContent = 'Error';
+                status.className = 'badge bg-danger';
+                avatar.classList.remove('listening');
+                waves.classList.remove('active');
+                break;
+        }
+    }
+    
+    async sendToAssistant(message) {
+        this.updateUI('processing');
+        
+        try {
+            const response = await fetch('/api/voice-assistant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
+            
+            const data = await response.json();
+            
+            if (data.response) {
+                this.currentResponse = data.response;
+                document.getElementById('sara-response').innerHTML = `<p>${data.response}</p>`;
+                document.getElementById('sara-response').parentElement.classList.add('active');
+                document.getElementById('speak-response').disabled = false;
+                
+                if (this.autoSpeakTimeout) {
+                    clearTimeout(this.autoSpeakTimeout);
+                }
+
+                this.autoSpeakTimeout = setTimeout(() => {
+                    this.speakResponse();
+                }, 500);
+            } else {
+                throw new Error(data.error || 'Error desconocido');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('sara-response').innerHTML = 
+                `<p class="text-danger">Error: ${error.message}</p>`;
+        }
+        
+        this.updateUI('stopped');
+    }
+    
+   
+    speakResponse() {
+            if (!this.currentResponse || !this.synthesis) return;
+
+            // Si ya está hablando, detener
+            if (this.isSpeaking) {
+                this.synthesis.cancel();
+                this.isSpeaking = false;
+                this.currentUtterance = null;
+
+                document.getElementById('speak-response').innerHTML =
+                    '<i class="fas fa-volume-up me-2"></i>Escuchar Respuesta';
+                return;
+            }
+
+            // Cancelar cualquier síntesis anterior
+            this.synthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(this.currentResponse);
+            this.currentUtterance = utterance;
+
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+
+            // Buscar voz en español
+            const voices = this.synthesis.getVoices();
+            const spanishVoice =
+                voices.find(voice => voice.lang.toLowerCase().startsWith('es') && voice.name.toLowerCase().includes('female')) ||
+                voices.find(voice => voice.lang.toLowerCase().startsWith('es'));
+
+            if (spanishVoice) {
+                utterance.voice = spanishVoice;
+            }
+
+            utterance.onstart = () => {
+                this.isSpeaking = true;
+                document.getElementById('speak-response').innerHTML =
+                    '<i class="fas fa-stop me-2"></i>Detener audio';
+                document.getElementById('voice-status').textContent = 'Hablando...';
+                document.getElementById('voice-status').className = 'badge bg-info';
+            };
+
+            utterance.onend = () => {
+                this.isSpeaking = false;
+                this.currentUtterance = null;
+                document.getElementById('speak-response').innerHTML =
+                    '<i class="fas fa-volume-up me-2"></i>Escuchar Respuesta';
+                this.updateUI('stopped');
+            };
+
+            utterance.onerror = () => {
+                this.isSpeaking = false;
+                this.currentUtterance = null;
+                document.getElementById('speak-response').innerHTML =
+                    '<i class="fas fa-volume-up me-2"></i>Escuchar Respuesta';
+                this.updateUI('error');
+            };
+
+            this.synthesis.speak(utterance);
+}
+    
+    
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    new VoiceAssistant();
+});
+</script>
+{% endblock %}

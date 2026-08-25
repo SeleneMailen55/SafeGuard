@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block title %}SafeGuard - Sección para Niños - Protección contra Grooming{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kids-section {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem 0;
+        color: #2c3e50;
+    }
+    
+    .info-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border: 3px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+        border-color: #ff6b6b;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .danger-card {
+        background: linear-gradient(135deg, #ff6b6b, #ffa8a8);
+        color: white;
+    }
+    
+    .safe-card {
+        background: linear-gradient(135deg, #4ecdc4, #7fdbda);
+        color: white;
+    }
+    
+    .help-card {
+        background: linear-gradient(135deg, #45b7d1, #96c6ea);
+        color: white;
+    }
+    
+    .emoji-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .kids-button {
+        border-radius: 25px;
+        padding: 10px 25px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .kids-button:hover {
+        transform: scale(1.05);
+    }
+    
+    .warning-box {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+    }
+    
+    .emergency-box {
+        background: #f8d7da;
+        border: 3px solid #dc3545;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+    
+    .step-number {
+        background: #ff6b6b;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin: 0 auto 1rem;
+    }
+    .quick-access {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 1.5rem 0 2rem 0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.quick-access .btn {
+    border-radius: 25px;
+    font-weight: 600;
+    padding: 12px 20px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="kids-section text-center">
+    <h1 class="display-4 fw-bold mb-4">
+        <span class="emoji-icon">🛡️</span>
+        <br>
+        ¡Hola! Vamos a aprender sobre seguridad
+    </h1>
+    <p class="lead">
+        Esta información te ayudará a estar seguro cuando uses internet, redes sociales o videojuegos
+    </p>
+</div>
+<div class="quick-access">
+    <h3 class="text-center mb-4">Accesos rápidos</h3>
+    <div class="row g-3 justify-content-center">
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('login') }}" class="btn btn-primary w-100 kids-button">
+                🔐 Iniciar sesión
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('register') }}" class="btn btn-success w-100 kids-button">
+                📝 Registrarse
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('dashboard_nino') }}" class="btn btn-warning w-100 kids-button">
+                📊 Dashboard niños
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-dark w-100 kids-button">
+                ⬅ Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+<!-- ¿Qué es el grooming? -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">
+                    <span class="emoji-icon">🤔</span>
+                    <br>
+                    ¿Qué es el "Grooming"?
+                </h2>
+                
+                <div class="info-card">
+                    <p class="fs-5 text-center mb-4">
+                        El <strong>"grooming"</strong> es cuando un adulto desconocido se hace pasar por tu amigo 
+                        en internet para hacerte daño.
+                    </p>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="emoji-icon">😈</div>
+                                <h5>El adulto malo</h5>
+                                <p>Se hace pasar por niño o joven para ganarse tu confianza</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="emoji-icon">🎭</div>
+                                <h5>Usa mentiras</h5>
+                                <p>Dice que te entiende mejor que tus padres</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="emoji-icon">🎁</div>
+                                <h5>Ofrece regalos</h5>
+                                <p>Te promete cosas para que confíes en él</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Señales de alerta -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card danger-card">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">
+                    <span class="emoji-icon">🚨</span>
+                    <br>
+                    ¡Señales de PELIGRO!
+                </h2>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="info-card bg-white text-dark">
+                            <h5><span class="text-danger">❌</span> Te pide que no le cuentes a nadie</h5>
+                            <p>Los adultos buenos NUNCA te piden guardar secretos de tus padres</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card bg-white text-dark">
+                            <h5><span class="text-danger">❌</span> Te hace preguntas personales</h5>
+                            <p>Como dónde vives, a qué escuela vas, si estás solo en casa</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card bg-white text-dark">
+                            <h5><span class="text-danger">❌</span> Te pide fotos</h5>
+                            <p>Especialmente fotos tuyas sin ropa o en ropa interior</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card bg-white text-dark">
+                            <h5><span class="text-danger">❌</span> Quiere conocerte en persona</h5>
+                            <p>Te propone encontrarse en algún lugar sin que tus padres sepan</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card bg-white text-dark">
+                            <h5><span class="text-danger">❌</span> Te dice que eres "especial"</h5>
+                            <p>Usa frases como "eres muy maduro para tu edad"</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card bg-white text-dark">
+                            <h5><span class="text-danger">❌</span> Te envía regalos o dinero</h5>
+                            <p>Sin razón aparente y sin que tus padres lo sepan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Qué hacer -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card safe-card">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">
+                    <span class="emoji-icon">✅</span>
+                    <br>
+                    ¿Qué hacer si te está pasando?
+                </h2>
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="step-number">1</div>
+                            <div class="info-card bg-white text-dark">
+                                <h5>No tengas miedo</h5>
+                                <p>NO es tu culpa. Los adultos son los responsables de protegerte.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="step-number">2</div>
+                            <div class="info-card bg-white text-dark">
+                                <h5>Guarda las pruebas</h5>
+                                <p>Toma capturas de pantalla de los mensajes, pero NO respondas.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="step-number">3</div>
+                            <div class="info-card bg-white text-dark">
+                                <h5>Habla con un adulto</h5>
+                                <p>Cuéntale a tus padres, un profesor o un adulto de confianza.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Consejos de seguridad -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">
+                    <span class="emoji-icon">🛡️</span>
+                    <br>
+                    Consejos para estar seguro
+                </h2>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="info-card safe-card text-white">
+                            <h5><span class="emoji-icon">👥</span>Nunca compartas información personal</h5>
+                            <p>Tu dirección, teléfono, escuela o cuando estás solo en casa</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card safe-card text-white">
+                            <h5><span class="emoji-icon">📷</span>No envíes fotos a desconocidos</h5>
+                            <p>Especialmente fotos tuyas, aunque te parezcan "normales"</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card safe-card text-white">
+                            <h5><span class="emoji-icon">👨‍👩‍👧‍👦</span>Habla con tus padres</h5>
+                            <p>Cuéntales sobre las personas que conoces en internet</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="info-card safe-card text-white">
+                            <h5><span class="emoji-icon">🚫</span>Nunca te encuentres en persona</h5>
+                            <p>Con alguien que conociste por internet, sin que tus padres lo sepan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Emergencia -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="emergency-box">
+            <h2 class="text-center text-danger mb-4">
+                <span class="emoji-icon">🚨</span>
+                <br>
+                ¡EMERGENCIA!
+            </h2>
+            
+            <div class="text-center">
+                <p class="fs-4 fw-bold text-danger mb-3">
+                    Si estás en peligro AHORA MISMO:
+                </p>
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <button class="btn btn-danger btn-lg kids-button w-100" onclick="alert('Llama al 911 inmediatamente')">
+                            <span class="emoji-icon">📞</span>
+                            <br>
+                            Llama al 911
+                        </button>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <button class="btn btn-warning btn-lg kids-button w-100" onclick="alert('Busca a un adulto de confianza cerca de ti')">
+                            <span class="emoji-icon">🏃‍♂️</span>
+                            <br>
+                            Busca ayuda
+                        </button>
+                    </div>
+                    
+                <div class="col-md-4">
+                        <button class="btn btn-info btn-lg kids-button w-100" onclick="alert('Ve a un lugar seguro con más personas')">
+                            <span class="emoji-icon">🏠</span>
+                            <br>
+                            Ve a un lugar seguro
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensaje de ánimo -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card help-card">
+            <div class="card-body p-4 text-center">
+                <span class="emoji-icon">💪</span>
+                <h3 class="mb-3">¡Recuerda que eres valiente!</h3>
+                <p class="fs-5 mb-4">
+                    Hablar sobre esto no te mete en problemas. Los adultos están aquí para protegerte.
+                    Si algo te hace sentir incómodo, confía en tu instinto y pide ayuda.
+                </p>
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="emoji-icon">👨‍👩‍👧‍👦</div>
+                        <h5>Tus padres te aman</h5>
+                        <p>Siempre van a estar de tu lado</p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="emoji-icon">👮‍♀️</div>
+                        <h5>La policía te ayuda</h5>
+                        <p>Están entrenados para proteger a los niños</p>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="emoji-icon">👩‍🏫</div>
+                        <h5>Los maestros te escuchan</h5>
+                        <p>Pueden ayudarte y contactar a tus padres</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Funciones adicionales para interactividad con los niños
+document.addEventListener('DOMContentLoaded', function() {
+    // Hacer que las cartas sean más interactivas
+    const cards = document.querySelectorAll('.info-card');
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            this.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+    });
+});
+</script>
+{% endblock %}

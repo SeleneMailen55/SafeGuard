@@ -1,0 +1,412 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Simulador de Chat - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        💬 Simulador de Chat Seguro
+    </h1>
+    <p class="lead">Practica cómo responder a situaciones peligrosas</p>
+    <p class="fs-6">Aprende a identificar conversaciones sospechosas y cómo reaccionar de forma segura</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg animate-on-scroll">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-mobile-alt me-2"></i>Simulador de Conversaciones
+                    </h4>
+                    <span class="badge bg-primary">Modo Práctica</span>
+                </div>
+            </div>
+            
+            <!-- Chat Simulator Container -->
+            <div id="chat-simulator">
+                <!-- El simulador se cargará aquí dinámicamente -->
+                <div class="text-center p-5">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Preparando simulación...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instrucciones -->
+        <div class="card mt-4 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Cómo Funciona
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="instruction-step">
+                            <div class="step-number">1</div>
+                            <h6>Lee el Mensaje</h6>
+                            <p>Observa cuidadosamente lo que dice la otra persona</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="instruction-step">
+                            <div class="step-number">2</div>
+                            <h6>Identifica Señales</h6>
+                            <p>Busca comportamientos extraños o solicitudes inapropiadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="instruction-step">
+                            <div class="step-number">3</div>
+                            <h6>Elige tu Respuesta</h6>
+                            <p>Selecciona la opción más segura y apropiada</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="instruction-step">
+                            <div class="step-number">4</div>
+                            <h6>Aprende</h6>
+                            <p>Recibe retroalimentación sobre tu elección</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Señales de alerta -->
+        <div class="card mt-4 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2 text-warning"></i>Señales de Alerta
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="alert-signal danger">
+                            <i class="fas fa-ban text-danger"></i>
+                            <div>
+                                <h6>Pide Información Personal</h6>
+                                <p>Tu dirección, teléfono, o dónde estudias</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="alert-signal danger">
+                            <i class="fas fa-camera text-danger"></i>
+                            <div>
+                                <h6>Solicita Fotos</h6>
+                                <p>Especialmente fotos privadas o sin ropa</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="alert-signal warning">
+                            <i class="fas fa-gift text-warning"></i>
+                            <div>
+                                <h6>Ofrece Regalos</h6>
+                                <p>Dinero, juegos, o cosas que te gustan</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="alert-signal warning">
+                            <i class="fas fa-user-secret text-warning"></i>
+                            <div>
+                                <h6>Pide Secretos</h6>
+                                <p>"No le digas a tus padres" o "será nuestro secreto"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.instruction-step {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.instruction-step:hover {
+    transform: translateY(-3px);
+    border-color: #667eea;
+    background: white;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+    font-size: 1.2rem;
+}
+
+.instruction-step h6 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.instruction-step p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.alert-signal {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.alert-signal.danger {
+    border-left-color: #dc3545;
+}
+
+.alert-signal.warning {
+    border-left-color: #ffc107;
+}
+
+.alert-signal i {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    margin-top: 0.2rem;
+}
+
+.alert-signal h6 {
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+    font-size: 1rem;
+}
+
+.alert-signal p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Contenedor principal del simulador */
+#chat-simulator {
+    padding: 1.25rem;
+    background: #f8f9fc;
+}
+
+#chat-simulator .card,
+#chat-simulator .scenario-card,
+#chat-simulator .simulator-wrapper {
+    border-radius: 16px;
+}
+
+/* Encabezado del escenario */
+.simulator-header {
+    margin-bottom: 1rem;
+}
+
+.simulator-header h5,
+.simulator-header h6 {
+    margin-bottom: 0.25rem;
+    color: #2c3e50;
+}
+
+.simulator-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+/* Área del chat */
+.chat-area {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+/* Mensajes */
+.chat-message {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 1.25rem 0;
+    padding: 0.95rem 1rem 0.95rem 1rem;
+    border-radius: 14px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    animation: slideIn 0.25s ease;
+    box-sizing: border-box;
+}
+
+.chat-message.stranger {
+    background: #f3f4f6;
+    border-bottom-left-radius: 6px;
+}
+
+.chat-message.danger {
+    background: #fff5f5;
+    border: 2px solid #ff6b6b;
+}
+
+.chat-message::before {
+    content: "Desconocido";
+    display: block;
+    position: static;
+    margin-bottom: 0.35rem;
+    font-size: 0.82rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/* Encabezado interno del mensaje, por si el HTML dinámico lo usa */
+.chat-message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.chat-message-time {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Contenido del mensaje */
+.message-content {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #212529;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* Si adentro hay ícono de alerta */
+.message-content i,
+.chat-message .fa-exclamation-triangle,
+.chat-message .fa-triangle-exclamation {
+    float: right;
+    margin-left: 0.75rem;
+    color: #dc3545;
+}
+
+/* Zona de respuestas */
+.response-section {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+}
+
+.response-title {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.9rem;
+}
+
+.response-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.response-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.95rem 1rem;
+    border-radius: 12px;
+    border: 1px solid #dbe2ea;
+    background: white;
+    color: #0d6efd;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    white-space: normal;
+    line-height: 1.4;
+}
+
+.response-btn:hover {
+    transform: translateX(3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #0d6efd;
+    background: #f8fbff;
+}
+
+/* Barra de progreso o etiquetas del escenario */
+.progress,
+.simulator-progress {
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.badge,
+.scenario-badge {
+    white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #chat-simulator {
+        padding: 0.75rem;
+    }
+
+    .chat-area {
+        padding: 0.75rem;
+    }
+
+    .chat-message {
+        padding: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .response-btn {
+        font-size: 0.95rem;
+        padding: 0.85rem 0.9rem;
+    }
+
+    .simulator-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Registro - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg animate-on-scroll">
+            <div class="card-header text-center">
+                <div class="icon-box">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3 class="mb-0">Crear Cuenta</h3>
+                <p class="text-muted mb-0">Únete a SafeGuard para proteger tu seguridad online</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form method="POST" id="register-form">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user me-2"></i>{{ form.username.label.text }}
+                            </label>
+                            {{ form.username(class="form-control", placeholder="Ejemplo: usuario123") }}
+                            {% if form.username.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.username.errors %}
+                                        <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>{{ form.email.label.text }}
+                            </label>
+                            {{ form.email(class="form-control", placeholder="ejemplo@correo.com") }}
+                            {% if form.email.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.email.errors %}
+                                        <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>{{ form.password.label.text }}
+                            </label>
+                            <div class="input-group">
+                                {{ form.password(class="form-control", placeholder="Mínimo 6 caracteres") }}
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye" id="password-icon"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength mt-1" id="password-strength"></div>
+                            {% if form.password.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.password.errors %}
+                                        <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="password2" class="form-label">
+                                <i class="fas fa-check me-2"></i>{{ form.password2.label.text }}
+                            </label>
+                            <div class="input-group">
+                                {{ form.password2(class="form-control", placeholder="Repite tu contraseña") }}
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password2')">
+                                    <i class="fas fa-eye" id="password2-icon"></i>
+                                </button>
+                            </div>
+                            <div class="password-match mt-1" id="password-match"></div>
+                            {% if form.password2.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.password2.errors %}
+                                        <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <label for="role" class="form-label">
+                                <i class="fas fa-users me-2"></i>{{ form.role.label.text }}
+                            </label>
+                            {{ form.role(class="form-select") }}
+                            {% if form.role.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.role.errors %}
+                                        <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="age" class="form-label">
+                                <i class="fas fa-birthday-cake me-2"></i>{{ form.age.label.text }}
+                            </label>
+                            {{ form.age(class="form-control", placeholder="Ej: 25", min="6", max="99") }}
+                            {% if form.age.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.age.errors %}
+                                        <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Role Information -->
+                    <div class="mt-3">
+                        <div class="alert alert-info role-info" id="role-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>Información sobre roles:</h6>
+                            <div id="role-description">
+                                <p class="mb-0">Selecciona tu rol para personalizar tu experiencia:</p>
+                                <ul class="mb-0 mt-2">
+                                    <li><strong>Niño/Adolescente:</strong> Acceso a material educativo, quiz interactivos y simuladores.</li>
+                                    <li><strong>Adulto/Padre/Tutor:</strong> Herramientas de análisis y monitoreo para proteger menores.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Terms and Privacy -->
+                    <div class="mt-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                He leído y acepto los 
+                                <a href="/terms" target="_blank" class="text-decoration-none">Términos de Servicio</a>
+                                y la 
+                                <a href="/privacy" target="_blank" class="text-decoration-none">Política de Privacidad</a>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="updates">
+                            <label class="form-check-label" for="updates">
+                                Quiero recibir actualizaciones y consejos de seguridad por email
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg" id="register-btn">
+                            <i class="fas fa-user-plus me-2"></i>Crear Mi Cuenta
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card-footer text-center">
+                <p class="mb-0">¿Ya tienes una cuenta? 
+                    <a href="/login" class="text-decoration-none fw-bold">
+                        <i class="fas fa-sign-in-alt me-1"></i>Inicia sesión aquí
+                    </a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Security Information -->
+        <div class="alert alert-success mt-4 animate-on-scroll">
+            <h5 class="alert-heading">
+                <i class="fas fa-shield-check me-2"></i>Cuenta Segura
+            </h5>
+            <p class="mb-0">
+                Tu información está protegida con encriptación de grado militar. 
+                SafeGuard nunca compartirá tus datos personales.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const passwordIcon = document.getElementById(fieldId + '-icon');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        passwordIcon.classList.remove('fa-eye');
+        passwordIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        passwordIcon.classList.remove('fa-eye-slash');
+        passwordIcon.classList.add('fa-eye');
+    }
+}
+
+// Password strength indicator
+document.getElementById('password').addEventListener('input', function() {
+    const password = this.value;
+    const strengthDiv = document.getElementById('password-strength');
+    const strength = calculatePasswordStrength(password);
+    
+    let color, text;
+    switch(strength) {
+        case 0:
+            color = 'text-muted';
+            text = '';
+            break;
+        case 1:
+            color = 'text-danger';
+            text = 'Débil';
+            break;
+        case 2:
+            color = 'text-warning';
+            text = 'Regular';
+            break;
+        case 3:
+            color = 'text-info';
+            text = 'Buena';
+            break;
+        case 4:
+            color = 'text-success';
+            text = 'Fuerte';
+            break;
+    }
+    
+    strengthDiv.innerHTML = text ? `<small class="${color}"><i class="fas fa-key me-1"></i>Seguridad: ${text}</small>` : '';
+});
+
+// Password match indicator
+document.getElementById('password2').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const password2 = this.value;
+    const matchDiv = document.getElementById('password-match');
+    
+    if (password2) {
+        if (password === password2) {
+            matchDiv.innerHTML = '<small class="text-success"><i class="fas fa-check me-1"></i>Las contraseñas coinciden</small>';
+        } else {
+            matchDiv.innerHTML = '<small class="text-danger"><i class="fas fa-times me-1"></i>Las contraseñas no coinciden</small>';
+        }
+    } else {
+        matchDiv.innerHTML = '';
+    }
+});
+
+// Role information
+document.getElementById('role').addEventListener('change', function() {
+    const role = this.value;
+    const ageField = document.getElementById('age');
+    const roleDescription = document.getElementById('role-description');
+    
+    if (role === 'niño') {
+        ageField.max = '17';
+        roleDescription.innerHTML = `
+            <p class="mb-0"><strong>Perfil de Niño/Adolescente seleccionado:</strong></p>
+            <ul class="mb-0 mt-2">
+                <li>Material educativo interactivo sobre seguridad online</li>
+                <li>Quiz y simuladores para aprender jugando</li>
+                <li>Sistema de contactos de confianza</li>
+                <li>Botón de emergencia siempre disponible</li>
+            </ul>
+        `;
+    } else if (role === 'adulto') {
+        ageField.max = '99';
+        ageField.min = '18';
+        roleDescription.innerHTML = `
+            <p class="mb-0"><strong>Perfil de Adulto/Padre/Tutor seleccionado:</strong></p>
+            <ul class="mb-0 mt-2">
+                <li>Analizador de mensajes con IA avanzada</li>
+                <li>Análisis de imágenes y capturas de pantalla</li>
+                <li>Reportes detallados en PDF</li>
+                <li>Historial completo de análisis</li>
+            </ul>
+        `;
+    }
+});
+
+function calculatePasswordStrength(password) {
+    let strength = 0;
+    
+    if (password.length >= 6) strength++;
+    if (password.length >= 10) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[^\w\s]/.test(password)) strength++;
+    
+    return Math.min(strength, 4);
+}
+
+// Form validation
+document.getElementById('register-form').addEventListener('submit', function(e) {
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const password2 = document.getElementById('password2').value;
+    const role = document.getElementById('role').value;
+    const age = document.getElementById('age').value;
+    const terms = document.getElementById('terms').checked;
+    
+    if (!username || !email || !password || !password2 || !role || !age) {
+        e.preventDefault();
+        window.safeguard.warning('Por favor completa todos los campos obligatorios.');
+        return;
+    }
+    
+    if (password !== password2) {
+        e.preventDefault();
+        window.safeguard.error('Las contraseñas no coinciden.');
+        return;
+    }
+    
+    if (password.length < 6) {
+        e.preventDefault();
+        window.safeguard.warning('La contraseña debe tener al menos 6 caracteres.');
+        return;
+    }
+    
+    if (!terms) {
+        e.preventDefault();
+        window.safeguard.warning('Debes aceptar los Términos de Servicio para continuar.');
+        return;
+    }
+    
+    // Show loading
+    const btn = document.getElementById('register-btn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creando cuenta...';
+    btn.disabled = true;
+});
+</script>
+{% endblock %}

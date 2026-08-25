@@ -1,0 +1,131 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Iniciar Sesión - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg animate-on-scroll">
+            <div class="card-header text-center">
+                <div class="icon-box">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <h3 class="mb-0">Iniciar Sesión</h3>
+                <p class="text-muted mb-0">Accede a tu cuenta SafeGuard</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form method="POST" id="login-form">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            <i class="fas fa-user me-2"></i>{{ form.username.label.text }}
+                        </label>
+                        {{ form.username(class="form-control", placeholder="Ingresa tu nombre de usuario") }}
+                        {% if form.username.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.username.errors %}
+                                    <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock me-2"></i>{{ form.password.label.text }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.password(class="form-control", placeholder="Ingresa tu contraseña") }}
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+                                <i class="fas fa-eye" id="password-icon"></i>
+                            </button>
+                        </div>
+                        {% if form.password.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.password.errors %}
+                                    <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember">
+                        <label class="form-check-label" for="remember">
+                            Recordarme en este dispositivo
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="/forgot-password" class="text-decoration-none">
+                            <i class="fas fa-question-circle me-1"></i>¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card-footer text-center">
+                <p class="mb-0">¿No tienes una cuenta? 
+                    <a href="/register" class="text-decoration-none fw-bold">
+                        <i class="fas fa-user-plus me-1"></i>Regístrate aquí
+                    </a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Security Notice -->
+        <div class="alert alert-info mt-4 animate-on-scroll">
+            <h5 class="alert-heading">
+                <i class="fas fa-shield-alt me-2"></i>Tu Seguridad es Importante
+            </h5>
+            <p class="mb-0">
+                SafeGuard protege tu información con las mejores medidas de seguridad. 
+                Nunca compartas tu contraseña con nadie.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const passwordField = document.getElementById('password');
+    const passwordIcon = document.getElementById('password-icon');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        passwordIcon.classList.remove('fa-eye');
+        passwordIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        passwordIcon.classList.remove('fa-eye-slash');
+        passwordIcon.classList.add('fa-eye');
+    }
+}
+
+// Form validation
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    
+    if (!username || !password) {
+        e.preventDefault();
+        window.safeguard.warning('Por favor completa todos los campos.');
+        return;
+    }
+    
+    if (username.length < 3) {
+        e.preventDefault();
+        window.safeguard.warning('El nombre de usuario debe tener al menos 3 caracteres.');
+        return;
+    }
+});
+</script>
+{% endblock %}

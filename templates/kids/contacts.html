@@ -1,0 +1,468 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Mis Contactos de Confianza - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        📞 Contactos de Confianza
+    </h1>
+    <p class="lead">Personas importantes que pueden ayudarte</p>
+    <p class="fs-6">Mantén una lista de adultos de confianza a quienes puedes acudir si necesitas ayuda</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Lista de contactos -->
+        <div class="card shadow-lg animate-on-scroll">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-users me-2"></i>Tus Contactos
+                </h4>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addContactModal">
+                    <i class="fas fa-plus me-2"></i>Agregar Contacto
+                </button>
+            </div>
+            
+            <div class="card-body">
+                {% if contacts %}
+                    <div class="row g-4">
+                        {% for contact in contacts %}
+                            <div class="col-md-6">
+                                <div class="contact-card-full">
+                                    <div class="contact-header">
+                                        <div class="contact-avatar-large">
+                                            {% if contact.relationship == 'padre' %}
+                                                <i class="fas fa-user-tie text-primary"></i>
+                                            {% elif contact.relationship == 'madre' %}
+                                                <i class="fas fa-female text-success"></i>
+                                            {% elif contact.relationship == 'maestro' %}
+                                                <i class="fas fa-chalkboard-teacher text-info"></i>
+                                            {% elif contact.relationship == 'tutor' %}
+                                                <i class="fas fa-user-graduate text-warning"></i>
+                                            {% else %}
+                                                <i class="fas fa-user text-secondary"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="contact-info">
+                                            <h5>{{ contact.name }}</h5>
+                                            <span class="badge bg-light text-dark">{{ contact.relationship.title() }}</span>
+                                            {% if contact.is_emergency %}
+                                                <span class="badge bg-danger ms-1">Emergencia</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contact-details">
+                                        {% if contact.phone %}
+                                            <div class="contact-detail">
+                                                <i class="fas fa-phone text-success"></i>
+                                                <span>{{ contact.phone }}</span>
+                                                <a href="tel:{{ contact.phone }}" class="btn btn-sm btn-success ms-auto">
+                                                    <i class="fas fa-phone"></i>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if contact.email %}
+                                            <div class="contact-detail">
+                                                <i class="fas fa-envelope text-info"></i>
+                                                <span>{{ contact.email }}</span>
+                                                <a href="mailto:{{ contact.email }}" class="btn btn-sm btn-info ms-auto">
+                                                    <i class="fas fa-envelope"></i>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="contact-actions mt-3">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editContact({{ contact.id }})">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteContact({{ contact.id }}, '{{ contact.name }}')">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-user-plus text-muted" style="font-size: 4rem;"></i>
+                        <h4 class="mt-3 text-muted">Aún no tienes contactos</h4>
+                        <p class="text-muted">Agrega personas de confianza que puedan ayudarte cuando lo necesites</p>
+                        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#addContactModal">
+                            <i class="fas fa-plus me-2"></i>Agregar Primer Contacto
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Consejos -->
+        <div class="card mt-4 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Consejos sobre Contactos de Confianza
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="tip-box">
+                            <i class="fas fa-family text-success"></i>
+                            <h6>Incluye Familia</h6>
+                            <p>Padres, hermanos mayores, tíos o abuelos que vivan cerca</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="tip-box">
+                            <i class="fas fa-school text-info"></i>
+                            <h6>Personal Escolar</h6>
+                            <p>Maestros, consejeros o directores de tu escuela</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="tip-box">
+                            <i class="fas fa-clock text-warning"></i>
+                            <h6>Disponibilidad</h6>
+                            <p>Asegúrate de que puedan contestar cuando los llames</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="tip-box">
+                            <i class="fas fa-heart text-danger"></i>
+                            <h6>Personas que Te Entiendan</h6>
+                            <p>Elige personas que te escuchen y te tomen en serio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Emergencia rápida -->
+        <div class="card emergency-card animate-on-scroll">
+            <div class="card-header text-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>¿Necesitas Ayuda Ahora?
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="mb-3">Si estás en peligro o te sientes muy asustado/a:</p>
+                
+                <div class="d-grid gap-2">
+                    <a href="tel:911" class="btn btn-danger btn-lg">
+                        <i class="fas fa-phone me-2"></i>Llamar 911
+                    </a>
+                    
+                    {% if contacts %}
+                        {% for contact in contacts %}
+                            {% if contact.is_emergency and contact.phone %}
+                                <a href="tel:{{ contact.phone }}" class="btn btn-warning">
+                                    <i class="fas fa-phone me-2"></i>Llamar {{ contact.name }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <button class="btn btn-info" onclick="showEmergencyHelp()">
+                        <i class="fas fa-info-circle me-2"></i>Más Opciones
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="card mt-4 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>Tu Red de Apoyo
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="stats-item">
+                    <div class="stats-number">{{ contacts|length }}</div>
+                    <div class="stats-label">Contactos Totales</div>
+                </div>
+                
+                <div class="stats-item">
+                    <div class="stats-number">{{ contacts|selectattr('is_emergency')|list|length }}</div>
+                    <div class="stats-label">Contactos de Emergencia</div>
+                </div>
+                
+                <div class="stats-item">
+                    <div class="stats-number">{{ contacts|selectattr('phone')|list|length }}</div>
+                    <div class="stats-label">Con Teléfono</div>
+                </div>
+                
+                <div class="progress mt-3">
+                    <div class="progress-bar" style="width: {{ ((contacts|length / 5) * 100)|round }}%"></div>
+                </div>
+                <small class="text-muted">Recomendamos tener al menos 5 contactos</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar contacto -->
+<div class="modal fade" id="addContactModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-plus me-2"></i>Agregar Contacto de Confianza
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <form id="contactForm">
+                {{ form.hidden_tag() }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-user me-2"></i>{{ form.name.label.text }}
+                        </label>
+                        {{ form.name(class="form-control", placeholder="Ejemplo: María González") }}
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-phone me-2"></i>{{ form.phone.label.text }}
+                            </label>
+                            {{ form.phone(class="form-control", placeholder="Ejemplo: +1234567890") }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-envelope me-2"></i>{{ form.email.label.text }}
+                            </label>
+                            {{ form.email(class="form-control", placeholder="ejemplo@correo.com") }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 mt-3">
+                        <label class="form-label">
+                            <i class="fas fa-users me-2"></i>{{ form.relationship.label.text }}
+                        </label>
+                        {{ form.relationship(class="form-select") }}
+                    </div>
+                    
+                    <div class="form-check">
+                        {{ form.is_emergency(class="form-check-input") }}
+                        <label class="form-check-label" for="is_emergency">
+                            <i class="fas fa-exclamation-triangle me-2 text-danger"></i>{{ form.is_emergency.label.text }}
+                        </label>
+                        <div class="form-text">
+                            Los contactos de emergencia aparecen en el botón de ayuda rápida
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Guardar Contacto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Enviar formulario de contacto
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Validación básica
+    if (!data.name.trim()) {
+        window.safeguard.warning('Por favor ingresa el nombre del contacto.');
+        return;
+    }
+    
+    if (!data.phone.trim() && !data.email.trim()) {
+        window.safeguard.warning('Por favor ingresa al menos un teléfono o email.');
+        return;
+    }
+    
+    // Enviar datos
+    fetch('/api/contacts/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.safeguard.success('¡Contacto agregado exitosamente!', 'Éxito');
+            // Cerrar modal y recargar página
+            bootstrap.Modal.getInstance(document.getElementById('addContactModal')).hide();
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            window.safeguard.error('Error al agregar contacto: ' + JSON.stringify(data.errors));
+        }
+    })
+    .catch(error => {
+        window.safeguard.error('Error de conexión. Inténtalo nuevamente.');
+    });
+});
+
+function editContact(contactId) {
+    window.safeguard.alert('Funcionalidad de edición próximamente', 'En desarrollo');
+}
+
+function deleteContact(contactId, contactName) {
+    window.safeguard.confirm(
+        `¿Estás seguro/a de que quieres eliminar a ${contactName} de tus contactos?`,
+        'Confirmar Eliminación',
+        () => {
+            // Aquí iría la lógica para eliminar
+            window.safeguard.success('Contacto eliminado', 'Éxito');
+        }
+    );
+}
+</script>
+
+<style>
+.contact-card-full {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.95));
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.contact-card-full:hover {
+    transform: translateY(-5px);
+    border-color: #667eea;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.15);
+}
+
+.contact-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.contact-avatar-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(102, 126, 234, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.contact-info h5 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.contact-detail {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    gap: 1rem;
+}
+
+.contact-detail:last-of-type {
+    border-bottom: none;
+}
+
+.contact-detail i {
+    width: 20px;
+    text-align: center;
+}
+
+.contact-detail span {
+    flex: 1;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.contact-actions {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.emergency-card {
+    background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+    border: 2px solid #ff9a9e;
+}
+
+.emergency-card .card-header {
+    background: rgba(255, 154, 158, 0.2);
+    border-bottom: 1px solid #ff9a9e;
+}
+
+.tip-box {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.tip-box:hover {
+    transform: translateY(-3px);
+    background: white;
+}
+
+.tip-box i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.tip-box h6 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.tip-box p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.stats-item {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.stats-number {
+    font-size: 2rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stats-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}

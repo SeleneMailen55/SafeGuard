@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}SafeGuard - Inicio - Protección contra Grooming{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center text-white">
+    <h1 class="display-4 fw-bold mb-4">
+        <i class="fas fa-shield-alt me-3"></i>
+        SafeGuard
+    </h1>
+    <p class="lead mb-4">
+        Una plataforma integral para prevenir y detectar el grooming infantil en entornos digitales
+    </p>
+    <p class="fs-5">
+        Protegemos a nuestros niños con tecnología avanzada e información educativa
+    </p>
+</div>
+
+<!-- Secciones principales -->
+<div class="row g-4 my-5">
+    <div class="col-md-6">
+        <div class="card h-100 text-center">
+            <div class="card-body p-4">
+                <div class="feature-icon">
+                    <i class="fas fa-child"></i>
+                </div>
+                <h3 class="card-title mb-3">Sección para Niños</h3>
+                <p class="card-text mb-4">
+                    Información educativa y recursos especialmente diseñados para que los niños y adolescentes 
+                    aprendan a identificar situaciones peligrosas y sepan cómo actuar.
+                </p>
+                <ul class="list-unstyled text-start mb-4">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>¿Qué es el grooming?</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Señales de alerta</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>¿Qué hacer si te está pasando?</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Recursos de ayuda</li>
+                </ul>
+                <a href="/ninos" class="btn btn-warning btn-lg">
+                    <i class="fas fa-arrow-right me-2"></i>Acceder
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100 text-center">
+            <div class="card-body p-4">
+                <div class="feature-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h3 class="card-title mb-3">Sección para Adultos</h3>
+                <p class="card-text mb-4">
+                    Herramientas avanzadas para padres, tutores y educadores que desean proteger a los menores 
+                    mediante análisis inteligente de comunicaciones.
+                </p>
+                <ul class="list-unstyled text-start mb-4">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Analizador de mensajes con IA</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Análisis de imágenes</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Historial de análisis</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Reportes en PDF</li>
+                </ul>
+                <a href="/adultos" class="btn btn-primary btn-lg">
+                    <i class="fas fa-arrow-right me-2"></i>Acceder
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información importante -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">
+                    <i class="fas fa-info-circle text-info me-2"></i>
+                    Información Importante
+                </h3>
+                
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-triangle text-warning" style="font-size: 2rem;"></i>
+                            <h5 class="mt-3">¿Qué es el Grooming?</h5>
+                            <p class="text-muted">
+                                Proceso por el cual un adulto se gana la confianza de un menor para obtener 
+                                beneficios sexuales o explotarlo.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-eye text-primary" style="font-size: 2rem;"></i>
+                            <h5 class="mt-3">Señales de Alerta</h5>
+                            <p class="text-muted">
+                                Regalos inesperados, secretos, aislamiento de amigos y familia, 
+                                conversaciones inapropiadas.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-phone text-success" style="font-size: 2rem;"></i>
+                            <h5 class="mt-3">¿Necesitas Ayuda?</h5>
+                            <p class="text-muted">
+                                Nunca dudes en pedir ayuda. Habla con un adulto de confianza o 
+                                llama a la línea de emergencia.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estadísticas y alertas -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Emergencia
+            </h4>
+            <p>Si estás en peligro inmediato o conoces a alguien que lo está:</p>
+            <hr>
+            <p class="mb-0">
+                <strong>Llama al 911 inmediatamente</strong><br>
+                <small>O contacta a las autoridades locales de tu país</small>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Recursos adicionales -->
+<div class="row g-4 my-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">
+                    <i class="fas fa-book-open text-primary me-2"></i>
+                    Recursos Útiles
+                </h3>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-link text-primary me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h6 class="mb-1">Línea Nacional de Ayuda</h6>
+                                <small class="text-muted">0800-222-1717 (gratuita)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope text-success me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h6 class="mb-1">Centro de Denuncias</h6>
+                                <small class="text-muted">denuncias@ciberseguridad.gov</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mt-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-users text-warning me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h6 class="mb-1">ONGs Especializadas</h6>
+                                <small class="text-muted">Organizaciones de protección infantil</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mt-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-graduation-cap text-info me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h6 class="mb-1">Programas Educativos</h6>
+                                <small class="text-muted">Talleres y capacitaciones</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

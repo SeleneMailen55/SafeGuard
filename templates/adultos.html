@@ -1,0 +1,666 @@
+{% extends "base.html" %}
+
+{% block title %}SafeGuard - Sección para Adultos - Analizador Anti-Grooming{% endblock %}
+
+{% block extra_css %}
+<style>
+    .analyzer-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        color: white;
+        margin: 2rem 0;
+    }
+
+    .analysis-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .risk-high {
+        border-left: 5px solid #dc3545;
+        background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    }
+
+    .risk-medium {
+        border-left: 5px solid #ffc107;
+        background: linear-gradient(135deg, #fffef7, #fff8e1);
+    }
+
+    .risk-low {
+        border-left: 5px solid #28a745;
+        background: linear-gradient(135deg, #f1f8e9, #e8f5e8);
+    }
+
+    .history-item {
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .history-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-area {
+        border: 3px dashed #007bff;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .upload-area:hover {
+        background: rgba(0, 123, 255, 0.1);
+        border-color: #0056b3;
+    }
+
+    .upload-area.dragover {
+        background: rgba(0, 123, 255, 0.2);
+        border-color: #0056b3;
+    }
+
+    .loading-spinner {
+        display: none;
+    }
+
+    .result-container {
+        display: none;
+        margin-top: 2rem;
+    }
+
+    .signal-badge {
+        display: inline-block;
+        background: #dc3545;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        margin: 0.2rem;
+    }
+
+    .recommendation {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .stats-card {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .quick-access {
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin: 1.5rem 0 2rem 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .quick-access .btn {
+        border-radius: 25px;
+        font-weight: 600;
+        padding: 12px 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analyzer-section text-center">
+    <h1 class="display-4 fw-bold mb-4">
+        <i class="fas fa-shield-halved me-3"></i>
+        Analizador Anti-Grooming
+    </h1>
+    <p class="lead mb-4">
+        Herramienta avanzada para detectar comportamientos predatorios en comunicaciones digitales
+    </p>
+    <p class="fs-5">
+        Utiliza inteligencia artificial para analizar mensajes e imágenes de conversaciones
+    </p>
+</div>
+
+<div class="quick-access">
+    <h3 class="text-center mb-4">Accesos rápidos</h3>
+    <div class="row g-3 justify-content-center">
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('login') }}" class="btn btn-primary w-100">
+                🔐 Iniciar sesión
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('register') }}" class="btn btn-success w-100">
+                📝 Registrarse
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('dashboard_adulto') }}" class="btn btn-warning w-100">
+                📊 Dashboard adulto
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-dark w-100">
+                ⬅ Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+
+<ul class="nav nav-pills justify-content-center mb-4" id="mainTabs">
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="pill" href="#analyzer">
+            <i class="fas fa-search me-2"></i>Analizador
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="pill" href="#history">
+            <i class="fas fa-history me-2"></i>Historial
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="pill" href="#reports">
+            <i class="fas fa-file-pdf me-2"></i>Reportes
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="analyzer">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card analysis-card h-100">
+                    <div class="card-header">
+                        <h4><i class="fas fa-comment-alt me-2"></i>Análisis de Mensajes de Texto</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="textAnalysisForm">
+                            <div class="mb-3">
+                                <label for="messageText" class="form-label">Pega el texto de la conversación aquí:</label>
+                                <textarea class="form-control" id="messageText" rows="8"
+                                    placeholder="Ejemplo:
+Hola, ¿cuántos años tienes?
+Me gusta hablar contigo, eres muy madura para tu edad
+¿Tus padres están en casa ahora?
+No le digas a nadie que hablamos..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-2"></i>Analizar Texto
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card analysis-card h-100">
+                    <div class="card-header">
+                        <h4><i class="fas fa-image me-2"></i>Análisis de Capturas de Pantalla</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #007bff;"></i>
+                            <h5 class="mt-3">Arrastra y suelta una imagen aquí</h5>
+                            <p class="text-muted">o haz clic para seleccionar archivo</p>
+                            <input type="file" id="imageInput" class="d-none" accept="image/*">
+                        </div>
+
+                        <div id="imagePreview" class="mt-3" style="display: none;">
+                            <img id="previewImg" class="img-fluid rounded" style="max-height: 200px;">
+                            <button type="button" id="analyzeImage" class="btn btn-primary mt-2">
+                                <i class="fas fa-search me-2"></i>Analizar Imagen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading-spinner text-center my-4">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+            <p class="mt-2">Analizando contenido con IA...</p>
+        </div>
+
+        <div class="result-container">
+            <div class="row g-4 mt-4">
+                <div class="col-12">
+                    <div class="card" id="resultCard">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4 id="resultTitle">Resultado del Análisis</h4>
+                            <span id="riskBadge" class="badge"></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Estado de la Amenaza</h5>
+                                    <p id="threatStatus" class="fs-5"></p>
+
+                                    <h5 class="mt-3">Nivel de Riesgo</h5>
+                                    <div class="progress mb-3">
+                                        <div id="riskProgress" class="progress-bar" style="width: 0%"></div>
+                                    </div>
+
+                                    <div id="signalsContainer">
+                                        <h5>Señales Detectadas</h5>
+                                        <div id="signalsList"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <h5>Explicación Detallada</h5>
+                                    <p id="analysisExplanation"></p>
+
+                                    <div id="recommendationsContainer">
+                                        <h5>Recomendaciones</h5>
+                                        <div id="recommendationsList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="history">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="stats-card text-center">
+                    <h3 id="totalAnalyses">{{ total_analyses|default(0) }}</h3>
+                    <p class="mb-0">Total Análisis</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card text-center">
+                    <h3 id="threatsDetected">{{ threats_detected|default(0) }}</h3>
+                    <p class="mb-0">Amenazas Detectadas</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card text-center">
+                    <h3 id="detectionRate">
+                        {% if total_analyses|default(0) > 0 %}
+                            {{ ((threats_detected|default(0) / total_analyses|default(1)) * 100)|round(1) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </h3>
+                    <p class="mb-0">Tasa de Detección</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>Historial reciente</h4>
+            </div>
+            <div class="card-body">
+                {% if recent_analyses %}
+                    <div id="historyList">
+                        {% for item in recent_analyses %}
+                            <div class="history-item {% if item.is_grooming %}risk-high{% else %}risk-low{% endif %}">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>
+                                            {% if item.content_type == 'imagen' %}🖼️ Imagen{% else %}📝 Texto{% endif %}
+                                            -
+                                            {% if item.is_grooming %}⚠️ AMENAZA{% else %}✅ SEGURO{% endif %}
+                                        </strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ item.timestamp.strftime('%d/%m/%Y %H:%M') }} | Riesgo: {{ item.risk_level|upper }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center mb-0">No hay análisis previos</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="reports">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-file-pdf me-2"></i>Generar Reportes</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Genera un reporte completo en PDF con los análisis realizados,
+                    incluyendo estadísticas y recomendaciones.
+                </p>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-chart-bar text-primary" style="font-size: 3rem;"></i>
+                                <h5 class="mt-3">Reporte Estadístico</h5>
+                                <p>Resumen general con estadísticas de tus análisis</p>
+                                <button class="btn btn-primary" onclick="generateReport('full')">
+                                    <i class="fas fa-download me-2"></i>Generar PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5>El reporte incluye:</h5>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Resumen ejecutivo</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Estadísticas detalladas</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Análisis individuales</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Señales detectadas</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Recomendaciones</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Fecha y hora de cada análisis</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{{ url_for('reports_page') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-folder-open me-2"></i>Ir a reportes avanzados
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentAnalysis = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    const uploadArea = document.getElementById('uploadArea');
+    const imageInput = document.getElementById('imageInput');
+
+    uploadArea.addEventListener('click', () => imageInput.click());
+    uploadArea.addEventListener('dragover', handleDragOver);
+    uploadArea.addEventListener('dragleave', handleDragLeave);
+    uploadArea.addEventListener('drop', handleDrop);
+
+    imageInput.addEventListener('change', handleImageSelect);
+
+    document.getElementById('textAnalysisForm').addEventListener('submit', analyzeText);
+    document.getElementById('analyzeImage').addEventListener('click', analyzeImage);
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('dragover');
+}
+
+function handleDragLeave(e) {
+    e.currentTarget.classList.remove('dragover');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && files[0].type.startsWith('image/')) {
+        handleImageFile(files[0]);
+        document.getElementById('imageInput').files = files;
+    }
+}
+
+function handleImageSelect(e) {
+    const file = e.target.files[0];
+    if (file) {
+        handleImageFile(file);
+    }
+}
+
+function handleImageFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const preview = document.getElementById('imagePreview');
+        const img = document.getElementById('previewImg');
+
+        img.src = e.target.result;
+        preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+async function analyzeText(e) {
+    e.preventDefault();
+
+    const messageText = document.getElementById('messageText').value.trim();
+    if (!messageText) {
+        alert('Por favor, ingresa un texto para analizar');
+        return;
+    }
+
+    showLoading();
+
+    try {
+        const response = await fetch('/api/public/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ mensaje: messageText })
+        });
+
+        const contentType = response.headers.get('content-type') || '';
+
+        if (!contentType.includes('application/json')) {
+            if (response.redirected || response.url.includes('/login')) {
+                alert('Debes iniciar sesión como adulto para usar el analizador.');
+                window.location.href = '/login';
+                return;
+            }
+
+            const text = await response.text();
+            console.error('Respuesta inesperada:', text);
+            alert('El servidor devolvió una respuesta inesperada.');
+            return;
+        }
+
+        const result = await response.json();
+
+        if (response.ok) {
+            displayAnalysisResult(result);
+        } else {
+            alert('Error: ' + (result.error || 'No se pudo analizar el texto'));
+        }
+    } catch (error) {
+        alert('Error de conexión: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+async function analyzeImage() {
+    const imageInput = document.getElementById('imageInput');
+    const file = imageInput.files[0];
+
+    if (!file) {
+        alert('Por favor, selecciona una imagen');
+        return;
+    }
+
+    showLoading();
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+        const response = await fetch('/api/public/analyze-image', {
+            method: 'POST',
+            body: formData
+        });
+
+        const contentType = response.headers.get('content-type') || '';
+
+        if (!contentType.includes('application/json')) {
+            if (response.redirected || response.url.includes('/login')) {
+                alert('Debes iniciar sesión como adulto para usar el analizador.');
+                window.location.href = '/login';
+                return;
+            }
+
+            const text = await response.text();
+            console.error('Respuesta inesperada:', text);
+            alert('El servidor devolvió una respuesta inesperada.');
+            return;
+        }
+
+        const result = await response.json();
+
+        if (response.ok) {
+            displayAnalysisResult(result);
+        } else {
+            alert('Error: ' + (result.error || 'No se pudo analizar la imagen'));
+        }
+    } catch (error) {
+        alert('Error de conexión: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+function displayAnalysisResult(result) {
+    currentAnalysis = result;
+
+    document.querySelector('.result-container').style.display = 'block';
+
+    const resultCard = document.getElementById('resultCard');
+    const riskBadge = document.getElementById('riskBadge');
+    const threatStatus = document.getElementById('threatStatus');
+    const riskProgress = document.getElementById('riskProgress');
+
+    resultCard.className = 'card';
+
+    if (result.es_grooming) {
+        resultCard.classList.add('risk-high');
+        riskBadge.className = 'badge bg-danger';
+        riskBadge.textContent = '⚠️ AMENAZA DETECTADA';
+        threatStatus.textContent = '🚨 SÍ - Se detectaron señales de grooming';
+        threatStatus.className = 'fs-5 text-danger fw-bold';
+    } else {
+        if (result.nivel_riesgo === 'medio') {
+            resultCard.classList.add('risk-medium');
+            riskBadge.className = 'badge bg-warning text-dark';
+            riskBadge.textContent = '⚠️ RIESGO MEDIO';
+            threatStatus.textContent = '⚠️ No concluyente - revisar manualmente';
+            threatStatus.className = 'fs-5 text-warning fw-bold';
+        } else {
+            resultCard.classList.add('risk-low');
+            riskBadge.className = 'badge bg-success';
+            riskBadge.textContent = '✅ SEGURO';
+            threatStatus.textContent = '✅ NO - No se detectaron señales de grooming';
+            threatStatus.className = 'fs-5 text-success fw-bold';
+        }
+    }
+
+    const riskValue = result.porcentaje_riesgo ?? (
+        result.nivel_riesgo === 'alto' ? 85 :
+        result.nivel_riesgo === 'medio' ? 50 :
+        result.nivel_riesgo === 'bajo' ? 15 : 0
+    );
+
+    let progressClass = 'bg-success';
+    if (result.nivel_riesgo === 'alto') progressClass = 'bg-danger';
+    if (result.nivel_riesgo === 'medio') progressClass = 'bg-warning';
+
+    riskProgress.className = 'progress-bar ' + progressClass;
+    riskProgress.style.width = riskValue + '%';
+    riskProgress.textContent = `${result.nivel_riesgo ? result.nivel_riesgo.toUpperCase() : 'N/A'} (${riskValue}%)`;
+
+    const signalsList = document.getElementById('signalsList');
+    signalsList.innerHTML = '';
+
+    if (result.señales_detectadas && result.señales_detectadas.length > 0) {
+        result.señales_detectadas.forEach(signal => {
+            const badge = document.createElement('span');
+            badge.className = 'signal-badge';
+            badge.textContent = signal;
+            signalsList.appendChild(badge);
+        });
+    } else {
+        signalsList.innerHTML = '<p class="text-muted">No se detectaron señales específicas</p>';
+    }
+
+    document.getElementById('analysisExplanation').textContent = result.explicacion || 'No disponible';
+
+    const recommendationsList = document.getElementById('recommendationsList');
+    recommendationsList.innerHTML = '';
+
+    if (result.recomendaciones && result.recomendaciones.length > 0) {
+        result.recomendaciones.forEach(rec => {
+            const div = document.createElement('div');
+            div.className = 'recommendation';
+            div.innerHTML = `<i class="fas fa-lightbulb me-2"></i>${rec}`;
+            recommendationsList.appendChild(div);
+        });
+    } else {
+        recommendationsList.innerHTML = '<p class="text-muted">No hay recomendaciones específicas</p>';
+    }
+
+    document.querySelector('.result-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function generateReport(reportType = 'full') {
+    try {
+        const response = await fetch('/api/generate-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type: reportType })
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `reporte_grooming_${new Date().toISOString().slice(0, 10)}.pdf`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } else {
+            const error = await response.json();
+            alert('Error generando reporte: ' + (error.error || 'No se pudo generar el PDF'));
+        }
+    } catch (error) {
+        alert('Error de conexión: ' + error.message);
+    }
+}
+
+function showLoading() {
+    document.querySelector('.loading-spinner').style.display = 'block';
+    document.querySelector('.result-container').style.display = 'none';
+}
+
+function hideLoading() {
+    document.querySelector('.loading-spinner').style.display = 'none';
+}
+</script>
+{% endblock %}

@@ -1,0 +1,684 @@
+{% extends "base_v2.html" %}
+
+{% block title %}ChatGuard - Chatbot PLN - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        🤖 ChatGuard - Chatbot PLN
+    </h1>
+    <p class="lead">Tu compañero inteligente para aprender sobre seguridad digital</p>
+    <p class="fs-6">Conversa de manera natural sobre protección online y ciberseguridad</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <!-- Panel Principal del Chatbot -->
+        <div class="card shadow-lg animate-on-scroll">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="chatbot-avatar me-3">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">ChatGuard</h4>
+                            <small class="text-muted">Chatbot de Seguridad Digital</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div id="typing-indicator" class="typing-indicator me-3" style="display: none;">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span id="status-indicator" class="badge bg-success">
+                            <i class="fas fa-circle me-1"></i>En línea
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <!-- Área de Chat -->
+                <div id="chat-container" class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Mensaje de bienvenida -->
+                        <div class="message bot-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    <p>¡Hola! Soy ChatGuard, tu asistente inteligente de seguridad digital. 🛡️</p>
+                                    <p>Estoy aquí para ayudarte a aprender sobre:</p>
+                                    <ul class="mb-0">
+                                        <li>Prevención de grooming online</li>
+                                        <li>Protección de datos personales</li>
+                                        <li>Seguridad en redes sociales</li>
+                                        <li>Cómo identificar amenazas</li>
+                                    </ul>
+                                </div>
+                                <div class="message-time">ahora</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Área de escritura -->
+                <div class="chat-input-area">
+                    <div class="input-group">
+                        <textarea id="message-input" 
+                                class="form-control" 
+                                placeholder="Escribe tu pregunta sobre seguridad digital..."
+                                rows="1"></textarea>
+                        <button id="send-btn" class="btn btn-primary" type="button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel de Sugerencias -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card animate-on-scroll">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-lightbulb me-2"></i>Temas Sugeridos
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="suggestion-buttons">
+                            <button class="btn btn-outline-primary btn-sm suggestion-btn mb-2" 
+                                    data-message="¿Qué es el grooming y cómo puedo identificarlo?">
+                                🎭 Identificar grooming
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm suggestion-btn mb-2" 
+                                    data-message="¿Cómo puedo proteger mi privacidad en redes sociales?">
+                                🔒 Privacidad en redes
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm suggestion-btn mb-2" 
+                                    data-message="¿Qué hacer si alguien me hace sentir incómodo online?">
+                                😰 Situaciones incómodas
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm suggestion-btn mb-2" 
+                                    data-message="Explícame sobre contraseñas seguras">
+                                🔑 Contraseñas seguras
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm suggestion-btn mb-2" 
+                                    data-message="¿Qué información nunca debo compartir online?">
+                                ⚠️ Información peligrosa
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm suggestion-btn mb-2" 
+                                    data-message="¿Cómo reportar contenido inapropiado?">
+                                📢 Reportar problemas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card animate-on-scroll">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>Estadísticas de Chat
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number" id="messages-count">0</div>
+                                <div class="stat-label">Mensajes enviados</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="topics-discussed">0</div>
+                                <div class="stat-label">Temas discutidos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="session-time">0m</div>
+                                <div class="stat-label">Tiempo de sesión</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Controles adicionales -->
+        <div class="card mt-4 animate-on-scroll">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6 class="mb-1">Controles de Chat</h6>
+                        <small class="text-muted">Gestiona tu experiencia de conversación</small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button id="clear-chat" class="btn btn-outline-warning me-2">
+                            <i class="fas fa-eraser me-1"></i>Limpiar Chat
+                        </button>
+                        <button id="export-chat" class="btn btn-outline-info">
+                            <i class="fas fa-download me-1"></i>Exportar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chatbot-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.chat-container {
+    height: 500px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.message {
+    display: flex;
+    margin-bottom: 1.5rem;
+    animation: slideInUp 0.3s ease;
+}
+
+.bot-message {
+    justify-content: flex-start;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.bot-message .message-avatar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.user-message .message-avatar {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    margin-right: 0;
+    margin-left: 0.75rem;
+    order: 2;
+}
+
+.message-content {
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-message .message-content {
+    align-items: flex-end;
+}
+
+.message-bubble {
+    background: white;
+    padding: 1rem 1.25rem;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    word-wrap: break-word;
+}
+
+.bot-message .message-bubble {
+    border-bottom-left-radius: 5px;
+}
+
+.user-message .message-bubble {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+.message-bubble::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+}
+
+.bot-message .message-bubble::before {
+    left: -10px;
+    border-right-color: white;
+    border-left: none;
+}
+
+.user-message .message-bubble::before {
+    right: -10px;
+    border-left-color: #667eea;
+    border-right: none;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    padding: 0 0.5rem;
+}
+
+.chat-input-area {
+    padding: 1rem;
+    background: white;
+    border-top: 1px solid #dee2e6;
+}
+
+.chat-input-area .input-group {
+    position: relative;
+}
+
+#message-input {
+    resize: none;
+    border-radius: 25px;
+    padding: 1rem 1.25rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    max-height: 120px;
+}
+
+#message-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+#send-btn {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-left: 0.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+#send-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.typing-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #667eea;
+    margin: 0 2px;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.suggestion-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.suggestion-btn {
+    border-radius: 20px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+.suggestion-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    text-align: center;
+}
+
+.stat-item {
+    padding: 1rem;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 10px;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar personalizada */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #667eea, #764ba2);
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #5a6fd8, #6a4190);
+}
+</style>
+
+<script>
+class ChatbotNLP {
+    constructor() {
+        this.chatHistory = [];
+        this.messageCount = 0;
+        this.topicsDiscussed = new Set();
+        this.sessionStartTime = Date.now();
+        
+        this.initElements();
+        this.bindEvents();
+        this.startSessionTimer();
+    }
+    
+    initElements() {
+        this.chatMessages = document.getElementById('chat-messages');
+        this.messageInput = document.getElementById('message-input');
+        this.sendBtn = document.getElementById('send-btn');
+        this.typingIndicator = document.getElementById('typing-indicator');
+        this.statusIndicator = document.getElementById('status-indicator');
+    }
+    
+    bindEvents() {
+        // Enviar mensaje
+        this.sendBtn.addEventListener('click', () => this.sendMessage());
+        
+        // Enter para enviar
+        this.messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.sendMessage();
+            }
+        });
+        
+        // Auto-resize textarea
+        this.messageInput.addEventListener('input', () => {
+            this.messageInput.style.height = 'auto';
+            this.messageInput.style.height = this.messageInput.scrollHeight + 'px';
+        });
+        
+        // Botones de sugerencias
+        document.querySelectorAll('.suggestion-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const message = btn.dataset.message;
+                this.messageInput.value = message;
+                this.sendMessage();
+            });
+        });
+        
+        // Limpiar chat
+        document.getElementById('clear-chat').addEventListener('click', () => {
+            this.clearChat();
+        });
+        
+        // Exportar chat
+        document.getElementById('export-chat').addEventListener('click', () => {
+            this.exportChat();
+        });
+    }
+    
+    async sendMessage() {
+        const message = this.messageInput.value.trim();
+        if (!message) return;
+        
+        // Agregar mensaje del usuario
+        this.addMessage(message, 'user');
+        this.messageInput.value = '';
+        this.messageInput.style.height = 'auto';
+        
+        // Mostrar indicador de escritura
+        this.showTypingIndicator();
+        
+        try {
+            // Enviar a la API
+            const response = await fetch('/api/chat-nlp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    history: this.chatHistory.slice(-10) // Últimos 10 mensajes
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.response) {
+                // Agregar respuesta del bot
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    this.addMessage(data.response, 'bot');
+                    this.updateChatHistory(message, data.response);
+                    this.detectTopics(message);
+                }, 1000 + Math.random() * 1500); // Simular tiempo de respuesta
+            } else {
+                throw new Error(data.error || 'Error desconocido');
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            this.hideTypingIndicator();
+            this.addMessage(`Lo siento, ocurrió un error: ${error.message}. Por favor, intenta de nuevo.`, 'bot');
+        }
+    }
+    
+    addMessage(content, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}-message`;
+        
+        const time = new Date().toLocaleTimeString('es-ES', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas fa-${type === 'user' ? 'user' : 'robot'}"></i>
+            </div>
+            <div class="message-content">
+                <div class="message-bubble">
+                    ${this.formatMessage(content)}
+                </div>
+                <div class="message-time">${time}</div>
+            </div>
+        `;
+        
+        this.chatMessages.appendChild(messageDiv);
+        this.scrollToBottom();
+        
+        // Actualizar estadísticas
+        if (type === 'user') {
+            this.messageCount++;
+            document.getElementById('messages-count').textContent = this.messageCount;
+        }
+    }
+    
+    formatMessage(content) {
+        // Convertir texto simple a HTML con formato básico
+        return content
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>')
+            .replace(/^\d+\.\s/gm, '<li>')
+            .replace(/^-\s/gm, '<li>')
+            .replace(/(<li>.*?)<br>/g, '$1</li>')
+            .replace(/(<li>.*?)((?=<li>)|$)/g, '<ul>$1</li></ul>')
+            .replace(/<\/ul><ul>/g, '');
+    }
+    
+    showTypingIndicator() {
+        this.typingIndicator.style.display = 'block';
+        this.statusIndicator.innerHTML = '<i class="fas fa-circle me-1"></i>Escribiendo...';
+        this.statusIndicator.className = 'badge bg-warning';
+    }
+    
+    hideTypingIndicator() {
+        this.typingIndicator.style.display = 'none';
+        this.statusIndicator.innerHTML = '<i class="fas fa-circle me-1"></i>En línea';
+        this.statusIndicator.className = 'badge bg-success';
+    }
+    
+    scrollToBottom() {
+        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+    
+    updateChatHistory(userMessage, botResponse) {
+        this.chatHistory.push({
+            user: userMessage,
+            bot: botResponse,
+            timestamp: Date.now()
+        });
+        
+        // Mantener solo los últimos 20 intercambios
+        if (this.chatHistory.length > 20) {
+            this.chatHistory = this.chatHistory.slice(-20);
+        }
+    }
+    
+    detectTopics(message) {
+        const topics = [
+            'grooming', 'privacidad', 'contraseña', 'redes sociales', 
+            'información personal', 'ciberseguridad', 'acoso', 'bullying'
+        ];
+        
+        const lowerMessage = message.toLowerCase();
+        topics.forEach(topic => {
+            if (lowerMessage.includes(topic)) {
+                this.topicsDiscussed.add(topic);
+            }
+        });
+        
+        document.getElementById('topics-discussed').textContent = this.topicsDiscussed.size;
+    }
+    
+    startSessionTimer() {
+        setInterval(() => {
+            const elapsed = Math.floor((Date.now() - this.sessionStartTime) / 60000);
+            document.getElementById('session-time').textContent = elapsed + 'm';
+        }, 60000);
+    }
+    
+    clearChat() {
+        if (confirm('¿Estás seguro de que quieres limpiar todo el chat?')) {
+            this.chatMessages.innerHTML = `
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Chat limpiado. ¡Empecemos de nuevo! ¿En qué puedo ayudarte hoy?</p>
+                        </div>
+                        <div class="message-time">ahora</div>
+                    </div>
+                </div>
+            `;
+            
+            this.chatHistory = [];
+            this.messageCount = 0;
+            this.topicsDiscussed.clear();
+            
+            document.getElementById('messages-count').textContent = '0';
+            document.getElementById('topics-discussed').textContent = '0';
+        }
+    }
+    
+    exportChat() {
+        if (this.chatHistory.length === 0) {
+            alert('No hay conversación para exportar.');
+            return;
+        }
+        
+        const chatText = this.chatHistory.map(exchange => 
+            `Usuario: ${exchange.user}\nChatGuard: ${exchange.bot}\n\n`
+        ).join('');
+        
+        const blob = new Blob([chatText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        
+        a.href = url;
+        a.download = `chatguard_conversacion_${new Date().toISOString().split('T')[0]}.txt`;
+        a.click();
+        
+        URL.revokeObjectURL(url);
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    new ChatbotNLP();
+});
+</script>
+{% endblock %}

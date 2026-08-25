@@ -1,0 +1,129 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Quiz de Seguridad - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        🎮 Quiz Interactivo de Seguridad
+    </h1>
+    <p class="lead">Pon a prueba tus conocimientos sobre seguridad online</p>
+    <p class="fs-6">Responde las preguntas y aprende cómo mantenerte seguro en internet</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg animate-on-scroll">
+            <div class="card-header text-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-brain me-2"></i>Quiz de Seguridad Online
+                </h4>
+            </div>
+            
+            <!-- Quiz Container -->
+            <div id="quiz-container">
+                <!-- El quiz se cargará aquí dinámicamente -->
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Preparando tu quiz...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Información adicional -->
+        <div class="row g-4 mt-4">
+            <div class="col-md-6">
+                <div class="card animate-on-scroll">
+                    <div class="card-body text-center">
+                        <i class="fas fa-trophy text-warning" style="font-size: 2rem;"></i>
+                        <h5 class="mt-3">Gana Puntos</h5>
+                        <p class="text-muted">Cada respuesta correcta suma puntos a tu perfil</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card animate-on-scroll">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap text-success" style="font-size: 2rem;"></i>
+                        <h5 class="mt-3">Aprende Jugando</h5>
+                        <p class="text-muted">Cada pregunta incluye explicaciones educativas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Consejos rápidos -->
+        <div class="card mt-4 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Consejos Rápidos
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="tip-card">
+                            <i class="fas fa-user-secret text-danger"></i>
+                            <h6>Desconocidos</h6>
+                            <p>Nunca hables con personas que no conoces en la vida real</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="tip-card">
+                            <i class="fas fa-eye-slash text-warning"></i>
+                            <h6>Información Privada</h6>
+                            <p>Tu dirección, teléfono y escuela deben mantenerse en secreto</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="tip-card">
+                            <i class="fas fa-comments text-success"></i>
+                            <h6>Habla con Adultos</h6>
+                            <p>Si algo te hace sentir incómodo, cuéntale a un adulto de confianza</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.tip-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+    border-color: #667eea;
+    background: white;
+}
+
+.tip-card i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.tip-card h6 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.tip-card p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+</style>
+{% endblock %}

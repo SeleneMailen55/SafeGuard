@@ -1,0 +1,304 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Mi Dashboard - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        🎆 ¡Hola {{ current_user.username }}!
+    </h1>
+    <p class="lead">Bienvenido/a a tu espacio seguro de aprendizaje</p>
+    <p class="fs-6">Aquí puedes aprender sobre seguridad online de manera divertida e interactiva</p>
+</div>
+
+<!-- Estadísticas del usuario -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="stat-card primary animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="stat-number">{{ completed_activities }}</div>
+            <div class="stat-label">Actividades Completadas</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card success animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-number">{{ avg_score }}%</div>
+            <div class="stat-label">Puntuación Promedio</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card warning animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-address-book"></i>
+            </div>
+            <div class="stat-number">{{ trusted_contacts|length }}</div>
+            <div class="stat-label">Contactos de Confianza</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card info animate-on-scroll">
+            <div class="icon-box mb-3">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-number">{{ total_activities }}</div>
+            <div class="stat-label">Total de Actividades</div>
+        </div>
+    </div>
+</div>
+
+<!-- Actividades principales -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 animate-on-scroll">
+            <div class="card-body text-center">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h4 class="card-title">Quiz de Seguridad</h4>
+                <p class="card-text">Pon a prueba tus conocimientos sobre cómo mantenerte seguro en línea</p>
+                <div class="d-grid">
+                    <a href="/kids/quiz" class="btn btn-primary">
+                        <i class="fas fa-play me-2"></i>Jugar Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 animate-on-scroll">
+            <div class="card-body text-center">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h4 class="card-title">Simulador de Chat</h4>
+                <p class="card-text">Practica cómo responder a situaciones peligrosas en conversaciones</p>
+                <div class="d-grid">
+                    <a href="/kids/chat-sim" class="btn btn-success">
+                        <i class="fas fa-play me-2"></i>Iniciar Simulador
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 animate-on-scroll">
+            <div class="card-body text-center">
+                <div class="icon-box mb-3">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h4 class="card-title">Material Educativo</h4>
+                <p class="card-text">Aprende sobre grooming, señales de peligro y cómo protegerte</p>
+                <div class="d-grid">
+                    <a href="/kids/learn" class="btn btn-info">
+                        <i class="fas fa-graduation-cap me-2"></i>Aprender
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contactos de confianza -->
+<div class="row g-4 mb-5">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>Tus Contactos de Confianza
+                </h5>
+                <a href="/kids/contacts" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-plus me-1"></i>Agregar
+                </a>
+            </div>
+            <div class="card-body">
+                {% if trusted_contacts %}
+                    <div class="row g-3">
+                        {% for contact in trusted_contacts[:4] %}
+                            <div class="col-md-6">
+                                <div class="contact-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="contact-avatar me-3">
+                                            {% if contact.relationship == 'padre' %}
+                                                <i class="fas fa-user-tie text-primary"></i>
+                                            {% elif contact.relationship == 'madre' %}
+                                                <i class="fas fa-female text-success"></i>
+                                            {% elif contact.relationship == 'maestro' %}
+                                                <i class="fas fa-chalkboard-teacher text-info"></i>
+                                            {% else %}
+                                                <i class="fas fa-user text-secondary"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ contact.name }}</h6>
+                                            <small class="text-muted">{{ contact.relationship.title() }}</small>
+                                            {% if contact.is_emergency %}
+                                                <span class="badge bg-danger ms-2">Emergencia</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if contact.phone %}
+                                            <a href="tel:{{ contact.phone }}" class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-phone"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if trusted_contacts|length > 4 %}
+                        <div class="text-center mt-3">
+                            <a href="/kids/contacts" class="text-decoration-none">
+                                <i class="fas fa-ellipsis-h me-1"></i>Ver todos ({{ trusted_contacts|length }})
+                            </a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-user-plus text-muted" style="font-size: 3rem;"></i>
+                        <h6 class="mt-3 text-muted">Aún no tienes contactos de confianza</h6>
+                        <p class="text-muted">Agregar contactos te ayuda a tener personas a quien acudir en caso de emergencia</p>
+                        <a href="/kids/contacts" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Agregar Primer Contacto
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Consejos de seguridad -->
+<div class="row g-4 mb-5">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Consejo de Seguridad del Día
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="fas fa-shield-alt text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h6>Nunca compartas información personal con desconocidos</h6>
+                        <p class="mb-2">
+                            Tu información personal incluye tu nombre completo, dirección, teléfono, 
+                            escuela y cualquier detalle que pueda identificarte o ubicarte.
+                        </p>
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>Recuerda: Si alguien te hace sentir incómodo/a, habla con un adulto de confianza
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progreso de aprendizaje -->
+<div class="row g-4">
+    <div class="col-12">
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Tu Progreso de Aprendizaje
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="learning-item">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold">Conceptos Básicos</span>
+                                <span class="badge bg-success">100%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" style="width: 100%"></div>
+                            </div>
+                            <small class="text-success mt-1 d-block">
+                                <i class="fas fa-check me-1"></i>Completado
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="learning-item">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold">Señales de Peligro</span>
+                                <span class="badge bg-warning">{{ avg_score }}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" style="width: {{ avg_score }}%"></div>
+                            </div>
+                            <small class="text-muted mt-1 d-block">
+                                <i class="fas fa-clock me-1"></i>En progreso
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="learning-item">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold">Respuestas Seguras</span>
+                                <span class="badge bg-secondary">0%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-secondary" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted mt-1 d-block">
+                                <i class="fas fa-play me-1"></i>Próximamente
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.contact-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+    border-color: #667eea;
+    background: white;
+    transform: translateY(-2px);
+}
+
+.contact-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(102, 126, 234, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.learning-item {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}

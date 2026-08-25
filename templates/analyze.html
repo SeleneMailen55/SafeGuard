@@ -1,0 +1,501 @@
+{% extends "base_v2.html" %}
+
+{% block title %}Analizador de Mensajes - SafeGuard{% endblock %}
+
+{% block content %}
+<div class="hero-section animate-on-scroll">
+    <h1 class="display-5 fw-bold mb-3">
+        <i class="fas fa-search me-3"></i>Analizador con IA
+    </h1>
+    <p class="lead">Detecta posibles casos de grooming con inteligencia artificial</p>
+    <p class="fs-6">Analiza mensajes de texto e imágenes para identificar comportamientos peligrosos</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Analizador de texto -->
+        <div class="card shadow-lg animate-on-scroll mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-comment-dots me-2"></i>Análisis de Mensajes de Texto
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="message-text" class="form-label">
+                        <i class="fas fa-paste me-2"></i>Mensaje a analizar
+                    </label>
+                    <textarea class="form-control" id="message-text" rows="6" 
+                            placeholder="Pega aquí el mensaje o conversación que deseas analizar...
+                            
+Ejemplo:
+Hola, vi tus fotos y eres muy guapa. ¿Cuántos años tienes?
+¿En qué escuela estudias? Me gustaría conocerte mejor.
+Te puedo dar dinero si me envías más fotos, pero no le digas a tus padres."></textarea>
+                </div>
+                
+                <div class="d-flex gap-3 flex-wrap">
+                    <button type="button" class="btn btn-primary btn-lg" id="analyze-btn" onclick="analyzeText()">
+                        <i class="fas fa-search me-2"></i>Analizar Texto
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearText()">
+                        <i class="fas fa-eraser me-2"></i>Limpiar
+                    </button>
+                    <button type="button" class="btn btn-outline-info" onclick="loadExample()">
+                        <i class="fas fa-lightbulb me-2"></i>Cargar Ejemplo
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analizador de imágenes -->
+        <div class="card shadow-lg animate-on-scroll mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-camera me-2"></i>Análisis de Imágenes
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="image-upload" class="form-label">
+                        <i class="fas fa-upload me-2"></i>Subir imagen o captura de pantalla
+                    </label>
+                    <input type="file" class="form-control" id="image-upload" 
+                           accept="image/*" onchange="handleImageUpload(this)">
+                    <div class="form-text">
+                        Formatos soportados: JPG, PNG, GIF. Tamaño máximo: 10MB
+                    </div>
+                </div>
+                
+                <div id="image-preview" class="mb-3" style="display: none;">
+                    <img id="preview-img" src="" alt="Vista previa" class="img-fluid rounded" style="max-height: 300px;">
+                </div>
+                
+                <div class="d-flex gap-3">
+                    <button type="button" class="btn btn-success btn-lg" id="analyze-image-btn" 
+                            onclick="analyzeImage()" disabled>
+                        <i class="fas fa-search me-2"></i>Analizar Imagen
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearImage()">
+                        <i class="fas fa-times me-2"></i>Quitar Imagen
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Análisis rápido -->
+        <div class="card shadow-lg animate-on-scroll">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>Análisis Rápido
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">Frases comunes que pueden indicar grooming:</p>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-warning btn-sm w-100" onclick="analyzeQuick('¿Cuántos años tienes? ¿En qué escuela estudias?')">
+                            Solicitud de información personal
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-warning btn-sm w-100" onclick="analyzeQuick('No le digas a tus padres, será nuestro secreto')">
+                            Pedido de secreto
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-warning btn-sm w-100" onclick="analyzeQuick('Te voy a regalar algo especial si me mandas fotos')">
+                            Oferta de regalo + solicitud
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-warning btn-sm w-100" onclick="analyzeQuick('Eres muy madura/o para tu edad, me gustas mucho')">
+                            Manipulación emocional
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Instrucciones -->
+        <div class="card animate-on-scroll mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Cómo Usar el Analizador
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="instruction-item">
+                    <div class="instruction-number">1</div>
+                    <div>
+                        <h6>Pega el Mensaje</h6>
+                        <p>Copia y pega el texto completo de la conversación sospechosa</p>
+                    </div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-number">2</div>
+                    <div>
+                        <h6>Sube la Imagen</h6>
+                        <p>O sube una captura de pantalla de la conversación</p>
+                    </div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-number">3</div>
+                    <div>
+                        <h6>Analizar</h6>
+                        <p>Haz clic en analizar y espera los resultados de la IA</p>
+                    </div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-number">4</div>
+                    <div>
+                        <h6>Revisar Resultado</h6>
+                        <p>Revisa el nivel de riesgo y las recomendaciones</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Señales de alerta -->
+        <div class="card animate-on-scroll mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2 text-warning"></i>Señales de Alerta
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert-item danger">
+                    <i class="fas fa-user-secret"></i>
+                    <div>
+                        <strong>Solicita información personal</strong>
+                        <p>Dirección, escuela, horarios</p>
+                    </div>
+                </div>
+                
+                <div class="alert-item danger">
+                    <i class="fas fa-camera"></i>
+                    <div>
+                        <strong>Pide fotos íntimas</strong>
+                        <p>O cualquier tipo de imagen personal</p>
+                    </div>
+                </div>
+                
+                <div class="alert-item warning">
+                    <i class="fas fa-gift"></i>
+                    <div>
+                        <strong>Ofrece regalos</strong>
+                        <p>Dinero, juegos, productos</p>
+                    </div>
+                </div>
+                
+                <div class="alert-item warning">
+                    <i class="fas fa-eye-slash"></i>
+                    <div>
+                        <strong>Pide secretos</strong>
+                        <p>"No le digas a nadie"</p>
+                    </div>
+                </div>
+                
+                <div class="alert-item info">
+                    <i class="fas fa-heart"></i>
+                    <div>
+                        <strong>Manipulación emocional</strong>
+                        <p>Halagos excesivos, "amor especial"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Estadísticas del usuario -->
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Tus Estadísticas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="stats-row">
+                    <span class="stats-label">Análisis realizados:</span>
+                    <span class="stats-value">{{ current_user.analyses|length }}</span>
+                </div>
+                
+                <div class="stats-row">
+                    <span class="stats-label">Amenazas detectadas:</span>
+                    <span class="stats-value text-danger">
+                        {{ current_user.analyses|selectattr('is_grooming')|list|length }}
+                    </span>
+                </div>
+                
+                <div class="stats-row">
+                    <span class="stats-label">Última actividad:</span>
+                    <span class="stats-value">
+                        {% if current_user.analyses %}
+                            {{ current_user.analyses[-1].timestamp.strftime('%d/%m %H:%M') }}
+                        {% else %}
+                            Nunca
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="mt-3">
+                    <a href="/dashboard/adulto" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-tachometer-alt me-2"></i>Ver Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Cargar mensaje desde sessionStorage si existe
+document.addEventListener('DOMContentLoaded', function() {
+    const quickMessage = sessionStorage.getItem('quick-message');
+    if (quickMessage) {
+        document.getElementById('message-text').value = quickMessage;
+        sessionStorage.removeItem('quick-message');
+    }
+});
+
+function clearText() {
+    document.getElementById('message-text').value = '';
+}
+
+function loadExample() {
+    const example = `Hola guapa, me encantan tus fotos. ¿Cuántos años tienes?
+    
+Te veo muy madura para tu edad. ¿Estudias cerca de mi casa?
+
+No le digas a nadie que hablamos, será nuestro secreto especial.
+
+Si me mandas más fotos te puedo dar dinero para que te compres cosas lindas.
+
+¿Tus papás están en casa ahora? Me gustaría conocerte en persona.`;
+
+    document.getElementById('message-text').value = example;
+}
+
+function analyzeQuick(message) {
+    document.getElementById('message-text').value = message;
+    analyzeText();
+}
+
+function handleImageUpload(input) {
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+            document.getElementById('image-preview').style.display = 'block';
+            document.getElementById('analyze-image-btn').disabled = false;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function clearImage() {
+    document.getElementById('image-upload').value = '';
+    document.getElementById('image-preview').style.display = 'none';
+    document.getElementById('analyze-image-btn').disabled = true;
+}
+
+function analyzeImage() {
+    const fileInput = document.getElementById('image-upload');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        window.safeguard.warning('Por favor selecciona una imagen primero.');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    // Mostrar loading
+    const analyzeBtn = document.getElementById('analyze-image-btn');
+    const originalText = analyzeBtn.innerHTML;
+    analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Analizando...';
+    analyzeBtn.disabled = true;
+    
+    fetch('/api/analyze-image', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        analyzeBtn.innerHTML = originalText;
+        analyzeBtn.disabled = false;
+        
+        if (data.error) {
+            window.safeguard.error('Error: ' + data.error);
+        } else {
+            showAnalysisResult(data);
+        }
+    })
+    .catch(error => {
+        analyzeBtn.innerHTML = originalText;
+        analyzeBtn.disabled = false;
+        window.safeguard.error('Error de conexión. Inténtalo nuevamente.');
+    });
+}
+
+function generateReport(type) {
+    window.safeguard.confirm(
+        `¿Deseas generar un reporte ${type === 'daily' ? 'diario' : type === 'weekly' ? 'semanal' : 'completo'}?`,
+        'Generar Reporte',
+        () => {
+            fetch('/api/generate-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type: type })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                }
+                throw new Error('Error generando reporte');
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `safeguard_${type}_report.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                window.safeguard.success('Reporte descargado exitosamente');
+            })
+            .catch(error => {
+                window.safeguard.error('Error generando reporte: ' + error.message);
+            });
+        }
+    );
+}
+</script>
+
+<style>
+.instruction-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.instruction-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.instruction-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.instruction-item h6 {
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+}
+
+.instruction-item p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.alert-item.danger {
+    border-left-color: #dc3545;
+}
+
+.alert-item.warning {
+    border-left-color: #ffc107;
+}
+
+.alert-item.info {
+    border-left-color: #17a2b8;
+}
+
+.alert-item i {
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+    margin-top: 0.2rem;
+    width: 20px;
+    text-align: center;
+}
+
+.alert-item.danger i {
+    color: #dc3545;
+}
+
+.alert-item.warning i {
+    color: #ffc107;
+}
+
+.alert-item.info i {
+    color: #17a2b8;
+}
+
+.alert-item strong {
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.alert-item p {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.stats-row:last-child {
+    border-bottom: none;
+}
+
+.stats-label {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.stats-value {
+    font-weight: 600;
+    color: #2c3e50;
+}
+</style>
+{% endblock %}
