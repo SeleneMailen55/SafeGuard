@@ -2,6 +2,11 @@
 
 SafeGuard es una aplicación web orientada a la prevención del grooming y al análisis asistido de conversaciones o capturas de pantalla potencialmente riesgosas. El sistema diferencia accesos por rol y ofrece herramientas específicas para adultos y para niños o adolescentes.
 
+> ⚠️ **Nota:** Este proyecto fue desarrollado con fines académicos y de práctica. Los números de contacto y emergencia incluidos en el código son de ejemplo y deben reemplazarse por los correspondientes a tu región antes de cualquier uso real.
+
+
+##Vista previa
+
 ## Funcionalidades
 
 ### Acceso y usuarios
@@ -39,90 +44,59 @@ SafeGuard es una aplicación web orientada a la prevención del grooming y al an
 
 - Python 3.10 o superior
 - pip
-- conexión a internet para las funciones que dependen de Gemini
+- Conexión a internet para las funciones que dependen de Gemini
 
 ## Instalación
 
 1. Crear un entorno virtual:
 
-
-
 ```bash
 python -m venv .venv
+```
 
-
-##Activarlo:
+2. Activarlo:
 
 En Windows:
-
+```bash
 .venv\Scripts\activate
+```
 
 En Linux/macOS:
-
+```bash
 source .venv/bin/activate
+```
 
-Instalar dependencias:
+3. Instalar dependencias:
 
+```bash
 pip install -r requirements.txt
-Configuración
+```
 
-La aplicación utiliza una variable de entorno para la clave de Gemini.
+## Configuración
 
-En PowerShell:
+La aplicación utiliza una variable de entorno para la clave de Gemini, cargada mediante un archivo `.env`.
 
-$env:GEMINI_API_KEY="TU_API_KEY"
+1. Creá un archivo `.env` en la raíz del proyecto con el siguiente contenido:
 
-En CMD:
+```
+GEMINI_API_KEY=tu_clave_aqui
+```
 
-set GEMINI_API_KEY=TU_API_KEY
+2. El archivo `.env` no debe subirse al repositorio (ya está incluido en `.gitignore`).
 
 También puede configurarse una clave secreta para Flask si se desea separar la configuración del código.
 
-Activarlo:
-
-En Windows:
-
-.venv\Scripts\activate
-
-En Linux/macOS:
-
-source .venv/bin/activate
-
-Instalar dependencias:
-
-pip install -r requirements.txt
-Configuración
-
-La aplicación utiliza una variable de entorno para la clave de Gemini.
-
-En PowerShell:
-
-$env:GEMINI_API_KEY="TU_API_KEY"
-
-En CMD:
-
-set GEMINI_API_KEY=TU_API_KEY
-
-También puede configurarse una clave secreta para Flask si se desea separar la configuración del código.
-
-
-##
 ## Base de datos
 
-La aplicación usa SQLite mediante SQLAlchemy.
-En desarrollo, la base se crea automáticamente al iniciar la aplicación.
+La aplicación usa SQLite mediante SQLAlchemy. En desarrollo, la base se crea automáticamente al iniciar la aplicación.
 
 Tablas principales:
+- `user`
+- `analysis`
+- `user_activity`
+- `trusted_contact`
+- `chat_simulation`
 
-user
+---
 
-analysis
-
-user_activity
-
-trusted_contact
-
-chat_simulation
-
-
-#Proyecto SafeGuard de Investigacion
+_#Proyecto SafeGuard - Proyecto de Investigación académica _
